@@ -1,305 +1,86 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CS:GO Case Battle</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root {
-            --bg-primary: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            --card-bg: rgba(255,255,255,0.08);
-            --accent-green: #00ff88;
-            --accent-gold: #ffd700;
-            --accent-red: #ff4444;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg-primary);
-            color: white;
-            min-height: 100vh;
-            overflow-x: hidden;
+            margin: 0; padding: 20px; background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white; font-family: -apple-system, sans-serif; min-height: 100vh;
         }
-        .container { 
-            max-width: 400px; 
-            margin: 0 auto; 
-            padding: 20px; 
-            min-height: 100vh;
-            position: relative;
-        }
-        
-        /* Header */
+        .container { max-width: 400px; margin: 0 auto; }
         .header {
-            text-align: center;
-            background: var(--card-bg);
-            padding: 25px 20px;
-            border-radius: 25px;
-            backdrop-filter: blur(20px);
-            margin-bottom: 25px;
-            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center; background: rgba(255,255,255,0.1); padding: 20px; 
+            border-radius: 20px; margin-bottom: 20px;
         }
-        .balance {
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 8px;
-            background: linear-gradient(45deg, var(--accent-green), #00cc6a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: none;
-        }
-        .pnl { 
-            font-size: 16px; 
-            font-weight: 600;
-            padding: 8px 16px;
-            border-radius: 20px;
-            display: inline-block;
-        }
-        .pnl.profit { 
-            background: rgba(0,255,136,0.2); 
-            color: var(--accent-green);
-            border: 1px solid var(--accent-green);
-        }
-        .pnl.loss { 
-            background: rgba(255,68,68,0.2); 
-            color: var(--accent-red);
-            border: 1px solid var(--accent-red);
-        }
-        
-        /* Game Cards */
+        #balance { font-size: 28px; font-weight: bold; color: #00ff88; }
         .game-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 25px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;
         }
         .game-card {
-            background: var(--card-bg);
-            border-radius: 25px;
-            padding: 25px 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            border: 2px solid transparent;
-            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; 
+            text-align: center; cursor: pointer; transition: all 0.3s;
         }
-        .game-card:hover, .game-card.active {
-            transform: translateY(-10px) scale(1.02);
-            border-color: var(--accent-green);
-            box-shadow: 0 25px 50px rgba(0,255,136,0.3);
-        }
-        .game-icon { 
-            font-size: 56px; 
-            margin-bottom: 15px; 
-            filter: drop-shadow(0 0 20px currentColor);
-        }
-        .game-title { 
-            font-size: 18px; 
-            font-weight: 700; 
-            margin-bottom: 5px;
-        }
-        .game-desc { 
-            font-size: 13px; 
-            opacity: 0.8;
-        }
+        .game-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,255,136,0.3); }
+        .game-icon { font-size: 40px; margin-bottom: 10px; }
         
-        /* Case Selection */
-        .case-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin: 20px 0;
-        }
+        .case-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
         .case-btn {
-            padding: 18px 8px;
-            border-radius: 20px;
-            border: none;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            padding: 15px; border: none; border-radius: 15px; font-weight: bold; 
+            color: white; cursor: pointer; transition: all 0.3s;
         }
-        .case-free { 
-            background: linear-gradient(45deg, #ffd700, #ffed4e); 
-            color: #333;
-            box-shadow: 0 10px 30px rgba(255,215,0,0.4);
-        }
-        .case-bravo { 
-            background: linear-gradient(45deg, #4a90e2, #357abd); 
-            color: white;
-        }
-        .case-classified { 
-            background: linear-gradient(45deg, #f7931e, #d67a1a); 
-            color: white;
-        }
-        .case-covert { 
-            background: linear-gradient(45deg, #ff6b6b, #ee5a52); 
-            color: white;
-        }
-        .case-mythic { 
-            background: linear-gradient(45deg, #9b59b6, #8e44ad); 
-            color: white;
-            box-shadow: 0 15px 40px rgba(155,89,182,0.5);
-        }
-        .case-btn:active { transform: scale(0.95); }
-        .case-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .daily { background: linear-gradient(45deg, gold, orange); }
+        .bravo { background: linear-gradient(45deg, #4a90e2, #357abd); }
+        .classified { background: linear-gradient(45deg, orange, red); }
+        .mythic { background: linear-gradient(45deg, purple, #8e44ad); }
         
-        /* Rocket Game */
-        .rocket-container {
-            text-align: center;
-            background: var(--card-bg);
-            border-radius: 25px;
-            padding: 25px;
-            backdrop-filter: blur(20px);
-        }
-        .multiplier {
-            font-size: 64px;
-            font-weight: 900;
-            margin: 20px 0;
-            min-height: 80px;
-            text-shadow: 0 0 40px currentColor;
-            font-variant-numeric: tabular-nums;
-            letter-spacing: -2px;
-        }
-        .multiplier.safe { color: var(--accent-green); }
-        .multiplier.danger { color: var(--accent-red); animation: pulse 0.5s infinite; }
-        
-        .controls { 
-            display: flex; 
-            gap: 12px; 
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
+        .rocket-section { text-align: center; }
+        #multiplier { font-size: 48px; font-weight: bold; margin: 20px 0; }
+        .controls { display: flex; gap: 10px; margin: 20px 0; flex-wrap: wrap; }
         .btn {
-            flex: 1;
-            padding: 16px 12px;
-            border: none;
-            border-radius: 25px;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            min-width: 90px;
+            flex: 1; padding: 15px; border: none; border-radius: 20px; 
+            font-weight: bold; cursor: pointer; transition: all 0.3s;
         }
-        .btn-primary { 
-            background: linear-gradient(45deg, var(--accent-green), #00cc6a); 
-            color: #000;
-            box-shadow: 0 10px 25px rgba(0,255,136,0.3);
-        }
-        .btn-cashout { 
-            background: linear-gradient(45deg, var(--accent-gold), #ffed4e) !important; 
-            color: #333 !important;
-            font-size: 20px !important;
-            box-shadow: 0 15px 35px rgba(255,215,0,0.5) !important;
-        }
+        .btn-primary { background: linear-gradient(45deg, #00ff88, #00cc6a); color: #000; }
+        .btn-cashout { background: linear-gradient(45deg, gold, orange); color: #000; font-size: 18px; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         
-        /* Canvas */
-        #gameCanvas { 
-            width: 100%; 
-            height: 320px; 
-            border-radius: 25px; 
-            display: none;
-            margin: 20px 0;
-            background: rgba(0,0,0,0.6);
-            border: 2px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-        }
-        
-        /* Animations */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0) rotate(0deg); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-3px) rotate(-1deg); }
-            20%, 40%, 60%, 80% { transform: translateX(3px) rotate(1deg); }
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-        }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-20px); }
-            60% { transform: translateY(-10px); }
-        }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .shake { animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both; }
-        .pulse { animation: pulse 0.6s infinite; }
-        .bounce { animation: bounce 0.8s; }
-        .spin { animation: spin 2s linear infinite; }
-        
-        /* Status */
-        #status {
-            text-align: center;
-            padding: 20px;
-            font-size: 18px;
-            font-weight: 600;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* Responsive */
-        @media (max-width: 400px) {
-            .container { padding: 15px; }
-            .multiplier { font-size: 48px; }
-        }
+        #status { text-align: center; padding: 20px; font-size: 18px; font-weight: bold; }
+        canvas { width: 100%; height: 250px; border-radius: 15px; display: none; margin: 20px 0; }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="header">
-            <div class="balance" id="balance">💰 100.00</div>
-            <div class="pnl" id="pnl">🟢 PnL: +0.00 (0%)</div>
+            <div id="balance">💰 100.0 монет</div>
         </div>
-
-        <!-- Main Menu -->
-        <div id="mainMenu" class="game-grid">
+        
+        <div class="game-grid" id="mainMenu">
             <div class="game-card" onclick="showCases()">
                 <div class="game-icon">🔓</div>
-                <div class="game-title">КЕЙСЫ</div>
-                <div class="game-desc">Dragon Lore, Fire Serpent</div>
+                <div>КЕЙСЫ</div>
             </div>
             <div class="game-card" onclick="showRocket()">
                 <div class="game-icon">🚀</div>
-                <div class="game-title">РАКЕТКА</div>
-                <div class="game-desc">Crash до 100x</div>
+                <div>РАКЕТКА</div>
             </div>
         </div>
-
-        <!-- Cases -->
+        
         <div id="casesSection" style="display:none;">
             <div class="case-grid">
-                <button class="case-btn case-free" onclick="openCase('Daily Free', 0)">
-                    🎁<br>БЕСПЛАТНО
-                </button>
-                <button class="case-btn case-bravo" onclick="openCase('Bravo', 10)">
-                    🔵<br>10💰
-                </button>
-                <button class="case-btn case-classified" onclick="openCase('Classified', 50)">
-                    🟡<br>50💰
-                </button>
-                <button class="case-btn case-covert" onclick="openCase('Covert', 100)">
-                    🟠<br>100💰
-                </button>
-                <button class="case-btn case-mythic" onclick="openCase('Mythic', 500)">
-                    🔴<br>500💰
-                </button>
+                <button class="case-btn daily" onclick="openCase('Daily')">🎁 Daily<br>0💰</button>
+                <button class="case-btn bravo" onclick="openCase('Bravo')">🔵 Bravo<br>10💰</button>
+                <button class="case-btn classified" onclick="openCase('Classified')">🟡 Classified<br>50💰</button>
+                <button class="case-btn mythic" onclick="openCase('Mythic')">🔴 Mythic<br>500💰</button>
             </div>
-            <button class="btn btn-primary" style="width:100%; margin-top:20px;" onclick="showMain()">🔙 Главное меню</button>
+            <button class="btn btn-primary" style="width:100%; margin-top:15px;" onclick="showMain()">🏠 Главное</button>
         </div>
-
-        <!-- Rocket -->
+        
         <div id="rocketSection" style="display:none;">
-            <div class="rocket-container">
-                <div class="multiplier safe" id="multiplier">1.00x</div>
+            <div class="rocket-section">
+                <div id="multiplier">1.00x</div>
                 <div class="controls">
                     <button class="btn btn-primary" onclick="setStake(10)">10💰</button>
                     <button class="btn btn-primary" onclick="setStake(50)">50💰</button>
@@ -307,295 +88,142 @@
                 </div>
                 <div class="controls">
                     <button class="btn btn-cashout" id="cashoutBtn" onclick="cashout()" disabled>💰 КЭШАУТ</button>
-                    <button class="btn btn-primary" onclick="startRocket()" id="startBtn">🚀 ЗАПУСК</button>
+                    <button class="btn btn-primary" onclick="startRocket()" id="startBtn">🚀 СТАРТ</button>
                 </div>
             </div>
-            <button class="btn btn-primary" style="width:100%;" onclick="showMain()">🔙 Главное меню</button>
+            <canvas id="rocketCanvas"></canvas>
+            <button class="btn btn-primary" style="width:100%;" onclick="showMain()">🏠 Главное</button>
         </div>
-
-        <!-- Canvas -->
-        <canvas id="gameCanvas"></canvas>
-        <div id="status">Готов к игре 🎮</div>
+        
+        <div id="status">Готов к игре!</div>
     </div>
 
     <script>
-        // Telegram WebApp
         const tg = window.Telegram.WebApp;
         tg.expand();
-        tg.MainButton.setText('🔙 ГЛАВНОЕ МЕНЮ').setColor('#00ff88').setTextColor('#000').onClick(showMain).show();
-
-        // Game State
+        tg.MainButton.setText('🏠 ГЛАВНОЕ').onClick(showMain).show();
+        
         let balance = 100, currentStake = 0, gameState = 'menu';
         let canvas, ctx, crashPoint = 1, currentMult = 1;
-        let particles = [], animationId, caseResult;
-
-        // Init
-        document.addEventListener('DOMContentLoaded', () => {
-            canvas = document.getElementById('gameCanvas');
-            ctx = canvas.getContext('2d');
-            canvas.width = 380; canvas.height = 300;
-            tg.HapticFeedback.impactOccurred('light');
+        const userId = tg.initDataUnsafe.user.id;
+        
+        // API
+        async function apiCall(action, data) {
+            const response = await tg.sendData(JSON.stringify({action, ...data, user_id: userId}));
             updateBalance();
-            setInterval(updateBalance, 2000);
-        });
-
+            return response;
+        }
+        
+        // Update balance
+        async function updateBalance() {
+            // Mock для demo - в реале делай fetch к твоему API
+            balance += (Math.random()-0.5)*5;
+            document.getElementById('balance').textContent = `💰 ${Math.max(0,balance).toFixed(1)} монет`;
+        }
+        setInterval(updateBalance, 3000);
+        
         // Navigation
         function showMain() {
             document.getElementById('mainMenu').style.display = 'grid';
             document.getElementById('casesSection').style.display = 'none';
             document.getElementById('rocketSection').style.display = 'none';
-            canvas.style.display = 'none';
-            document.getElementById('status').textContent = 'Готов к игре 🎮';
-            gameState = 'menu';
             tg.MainButton.show();
-            tg.HapticFeedback.selectionChanged();
         }
-
+        
         function showCases() {
             document.getElementById('mainMenu').style.display = 'none';
             document.getElementById('casesSection').style.display = 'block';
             document.getElementById('rocketSection').style.display = 'none';
-            canvas.style.display = 'none';
-            gameState = 'cases';
             tg.MainButton.hide();
-            tg.HapticFeedback.selectionChanged();
         }
-
+        
         function showRocket() {
             document.getElementById('mainMenu').style.display = 'none';
             document.getElementById('casesSection').style.display = 'none';
             document.getElementById('rocketSection').style.display = 'block';
+            canvas = document.getElementById('rocketCanvas');
+            ctx = canvas.getContext('2d');
+            canvas.width = 380; canvas.height = 250;
             canvas.style.display = 'block';
-            gameState = 'rocket';
             tg.MainButton.hide();
-            initRocketCanvas();
-            tg.HapticFeedback.selectionChanged();
         }
-
-        // Cases
-        async function openCase(type, price) {
-            if (balance < price && price > 0) {
-                tg.showAlert('❌ Недостаточно монет!');
-                return;
-            }
-
-            gameState = 'opening';
-            canvas.style.display = 'block';
-            document.getElementById('status').innerHTML = '🔒 Ключ вставлен...';
-            canvas.classList.add('shake');
-
-            setTimeout(() => spinRoulette(type), 800);
+        
+        // КЕЙСЫ - отправка в бот
+        async function openCase(caseName) {
+            document.getElementById('status').textContent = '🔒 Открываем кейс...';
+            await apiCall('open_case', {case_name: caseName});
+            document.getElementById('status').textContent = '✨ КЕЙС ОТКРЫТ!';
+            setTimeout(showMain, 1500);
         }
-
-        function spinRoulette(type) {
-            let spins = 0, direction = 1;
-            const spin = () => {
-                const rarities = ['🔵','🟡','🟢','🟠','🔴'];
-                const pos = (spins * 0.3) % rarities.length;
-                document.getElementById('status').innerHTML = 
-                    rarities.map((r,i) => i === Math.floor(pos) ? `<span class="pulse">${r}</span>` : r).join(' ');
-                spins++;
-                
-                if (spins < 45) requestAnimationFrame(spin);
-                else showCaseResult(type);
-            };
-            spin();
-        }
-
-        function showCaseResult(type) {
-            const results = {
-                'Daily Free': ['🔵 Blue Steel +3.2', '🟢 Urban Masked +1.1', '🟡 Safari Mesh +8.7'],
-                'Bravo': ['🔴 Dragon Lore +450!', '🟠 Fire Serpent +85', '🔵 Blue Gem +7.2'],
-                'Classified': ['🟠 M4 Howl +250', '🟢 Asiimov +42'],
-                'Covert': ['🔴 Karambit Fade +1200!', '🟠 M9 Bayonet +350'],
-                'Mythic': ['🔴 Golden Knife +4500!']
-            };
-            
-            caseResult = results[type][Math.floor(Math.random() * results[type].length)];
-            document.getElementById('status').innerHTML = `✨ ${caseResult}`;
-            canvas.classList.add('bounce');
-            tg.HapticFeedback.notificationOccurred('success');
-            
-            setTimeout(() => {
-                canvas.classList.remove('shake', 'bounce');
-                showMain();
-                updateBalance();
-            }, 2500);
-        }
-
-        // Rocket
+        
+        // РАКЕТКА
         function setStake(amount) {
             currentStake = amount;
             document.getElementById('multiplier').textContent = `${amount}💰 | 1.00x`;
-            tg.HapticFeedback.impactOccurred('medium');
         }
-
-        function startRocket() {
-            if (!currentStake) {
-                tg.showAlert('Выбери ставку!');
+        
+        async function startRocket() {
+            if (!currentStake || balance < currentStake) {
+                tg.showAlert('❌ Недостаточно монет!');
                 return;
             }
-            if (balance < currentStake) {
-                tg.showAlert('Недостаточно средств!');
-                return;
-            }
-
-            document.getElementById('startBtn').style.display = 'none';
+            
+            document.getElementById('startBtn').disabled = true;
             document.getElementById('cashoutBtn').disabled = false;
             crashPoint = Math.max(1.01, 1 / (Math.random() * 0.99 + 0.01));
             currentMult = 1.0;
             gameState = 'flying';
-            tg.HapticFeedback.notificationOccurred('error');
-
+            
             animateRocket();
         }
-
+        
         function cashout() {
+            apiCall('rocket_cashout', {stake: currentStake, multiplier: currentMult});
             gameState = 'cashed';
-            const win = currentStake * currentMult;
-            document.getElementById('multiplier').textContent = `+${win.toFixed(1)}💰`;
             document.getElementById('cashoutBtn').disabled = true;
-            tg.HapticFeedback.notificationOccurred('success');
-            updateBalance();
             setTimeout(() => {
-                document.getElementById('startBtn').style.display = 'inline-block';
+                document.getElementById('startBtn').disabled = false;
                 document.getElementById('multiplier').textContent = '1.00x';
-                document.getElementById('multiplier').className = 'multiplier safe';
-            }, 1500);
+            }, 2000);
         }
-
-        // Canvas Rocket
-        function initRocketCanvas() {
-            ctx.fillStyle = 'rgba(0,10,30,0.9)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
-
+        
+        // Canvas rocket animation
+        let raf;
         function animateRocket() {
             if (gameState !== 'flying') return;
-
-            initRocketCanvas();
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             currentMult += 0.08;
-
-            // Rocket position
-            const rocketX = canvas.width / 2;
-            const rocketY = Math.max(50, 280 - currentMult * 15);
-
-            // Draw rocket trail
-            const gradient = ctx.createLinearGradient(rocketX, 280, rocketX, rocketY);
-            gradient.addColorStop(0, 'rgba(255,100,0,0.8)');
-            gradient.addColorStop(1, 'rgba(255,50,0,0)');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(rocketX-3, rocketY+20, 6, 280-rocketY);
-
-            // Rocket body
-            ctx.save();
-            ctx.translate(rocketX, rocketY);
-            ctx.rotate(Math.sin(Date.now()*0.008)*0.1);
             
-            const rocketGradient = ctx.createRadialGradient(0,0,0,0,0,25);
-            rocketGradient.addColorStop(0, currentMult>2 ? '#ff4444' : '#00ff88');
-            rocketGradient.addColorStop(0.7, '#444');
-            rocketGradient.addColorStop(1, '#222');
-            ctx.fillStyle = rocketGradient;
+            // Rocket
+            const x = canvas.width / 2;
+            const y = Math.max(50, 200 - currentMult * 10);
             
+            ctx.fillStyle = currentMult > 2 ? '#ff4444' : '#00ff88';
             ctx.beginPath();
-            ctx.moveTo(-12, 25);
-            ctx.lineTo(0, -35);
-            ctx.lineTo(12, 25);
-            ctx.lineTo(8, 30);
-            ctx.lineTo(-8, 30);
-            ctx.closePath();
+            ctx.moveTo(x-10, y+20);
+            ctx.lineTo(x, y-30);
+            ctx.lineTo(x+10, y+20);
             ctx.fill();
-
-            // Engine fire
-            ctx.fillStyle = '#ff6600';
-            ctx.beginPath();
-            ctx.moveTo(-4, 30);
-            ctx.lineTo(0, 55 + Math.sin(Date.now()*0.02)*3);
-            ctx.lineTo(4, 30);
-            ctx.fill();
-
-            ctx.restore();
-
-            // Update multiplier
+            
+            // Update UI
             document.getElementById('multiplier').textContent = `${currentMult.toFixed(2)}x`;
-            document.getElementById('multiplier').className = 
-                currentMult > 2 ? 'multiplier danger' : 'multiplier safe';
-
+            
             if (currentMult >= crashPoint) {
-                explode();
+                gameState = 'crashed';
+                document.getElementById('multiplier').textContent = `💥 ${crashPoint.toFixed(2)}x`;
+                document.getElementById('cashoutBtn').disabled = true;
+                document.getElementById('startBtn').disabled = false;
                 return;
             }
-
-            animationId = requestAnimationFrame(animateRocket);
-        }
-
-        function explode() {
-            gameState = 'exploded';
-            cancelAnimationFrame(animationId);
-
-            // Explosion particles
-            for (let i = 0; i < 120; i++) {
-                particles.push({
-                    x: canvas.width/2,
-                    y: 280,
-                    vx: (Math.random()-0.5)*18,
-                    vy: (Math.random()-0.5)*18,
-                    life: 1,
-                    maxLife: 1,
-                    size: Math.random()*6+2
-                });
-            }
-
-            let frame = 0;
-            const explodeLoop = () => {
-                initRocketCanvas();
-                
-                particles = particles.filter(p => {
-                    p.x += p.vx; p.y += p.vy;
-                    p.life -= 0.04; p.vx *= 0.97; p.vy *= 0.97;
-                    
-                    ctx.save();
-                    ctx.globalAlpha = p.life;
-                    ctx.fillStyle = `hsl(${30 + (1-p.life)*30}, 100%, ${50 + p.life*20}%)`;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI*2);
-                    ctx.fill();
-                    ctx.restore();
-                    
-                    return p.life > 0;
-                });
-
-                frame++;
-                if (particles.length > 0 && frame < 60) {
-                    requestAnimationFrame(explodeLoop);
-                } else {
-                    document.getElementById('multiplier').textContent = `💥 ${crashPoint.toFixed(2)}x`;
-                    document.getElementById('multiplier').className = 'multiplier danger';
-                    document.getElementById('cashoutBtn').disabled = true;
-                    tg.HapticFeedback.notificationOccurred('error');
-                    setTimeout(() => {
-                        document.getElementById('startBtn').style.display = 'inline-block';
-                        document.getElementById('multiplier').textContent = '1.00x';
-                    }, 2000);
-                }
-            };
-            explodeLoop();
-        }
-
-        // API (mock для demo - в продакшене делай запросы к твоему бэкенду)
-        async function updateBalance() {
-            // Симуляция баланса (замени на реальный API)
-            balance += (Math.random() - 0.5) * 2;
-            balance = Math.max(0, balance);
             
-            document.getElementById('balance').textContent = `💰 ${balance.toFixed(1)}`;
-            
-            const pnl = (Math.random() - 0.5) * 50;
-            const pnlEl = document.getElementById('pnl');
-            pnlEl.textContent = `${pnl >= 0 ? '🟢' : '🔴'} PnL: ${pnl.toFixed(1)}`;
-            pnlEl.className = `pnl ${pnl >= 0 ? 'profit' : 'loss'}`;
+            raf = requestAnimationFrame(animateRocket);
         }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            tg.ready();
+            updateBalance();
+        });
     </script>
 </body>
 </html>
