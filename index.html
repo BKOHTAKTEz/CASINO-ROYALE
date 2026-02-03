@@ -436,31 +436,31 @@
             overflow: hidden;
         }
 
+        /* ПЛИНКО - НОВЫЙ ДИЗАЙН */
         .plinko-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             margin: 20px 0;
             width: 100%;
-            overflow: hidden;
         }
 
         .plinko-board {
             width: 100%;
-            max-width: 500px;
-            height: 350px;
-            background: linear-gradient(to bottom, #1a1a2e, #0f3460);
-            border-radius: 10px;
+            max-width: 600px;
+            height: 400px;
+            background: linear-gradient(to bottom, #0a0a0a, #1a1a2e);
+            border-radius: 15px;
             border: 3px solid #ffd700;
             position: relative;
             overflow: hidden;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         .plinko-pin {
             position: absolute;
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
             border-radius: 50%;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
@@ -469,44 +469,62 @@
 
         .plinko-ball {
             position: absolute;
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             background: radial-gradient(circle at 30% 30%, #ff416c, #c2185b);
             border-radius: 50%;
             z-index: 10;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-            transition: left 0.05s linear, top 0.05s linear;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+            transition: transform 0.1s linear;
         }
 
         .plinko-slots-container {
             width: 100%;
-            max-width: 500px;
-            margin-top: 10px;
+            max-width: 600px;
         }
 
         .plinko-slots {
             display: flex;
             justify-content: space-between;
+            gap: 2px;
         }
 
         .plinko-slot {
             flex: 1;
-            margin: 0 2px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
+            height: 50px;
+            background: rgba(255, 255, 255, 0.05);
             border: 2px solid #ffd700;
-            border-radius: 5px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             color: #ffd700;
-            font-size: 12px;
+            font-size: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plinko-slot::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: rgba(255, 215, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
         }
 
         .plinko-slot.active {
-            background: rgba(255, 215, 0, 0.3);
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            background: rgba(255, 215, 0, 0.2);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            animation: slotPulse 0.5s ease-in-out;
+        }
+
+        @keyframes slotPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .roulette-table {
@@ -539,6 +557,16 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .roulette-number:hover {
+            transform: scale(1.05);
+        }
+
+        .roulette-number.selected {
+            box-shadow: 0 0 10px 2px gold;
+            transform: scale(1.05);
         }
 
         .roulette-number.red {
@@ -575,9 +603,21 @@
         }
 
         .roulette-bet:hover,
-        .roulette-bet.active {
+        .roulette-bet.selected {
             background: rgba(255, 215, 0, 0.2);
             border-color: #ffd700;
+        }
+
+        .roulette-multi-bet {
+            background: rgba(156, 39, 176, 0.2);
+            border: 2px solid #9c27b0;
+            color: #e1bee7;
+        }
+
+        .roulette-multi-bet:hover,
+        .roulette-multi-bet.selected {
+            background: rgba(156, 39, 176, 0.4);
+            border-color: #e1bee7;
         }
 
         .cards-container {
@@ -601,6 +641,7 @@
             font-weight: bold;
             color: #333;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
         }
 
         .card.red {
@@ -614,6 +655,15 @@
         .card-suit {
             font-size: 18px;
             margin-top: 5px;
+        }
+
+        .card-back {
+            background: linear-gradient(45deg, #1a1a2e, #0f3460);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
         }
 
         .mines-grid {
@@ -658,12 +708,13 @@
             color: white;
         }
 
+        /* КРАШ - улучшенный */
         .crash-container {
             width: 100%;
-            height: 200px;
-            background: rgba(0, 0, 0, 0.3);
+            height: 250px;
+            background: linear-gradient(to bottom, #000428, #004e92);
             border: 3px solid #ffd700;
-            border-radius: 10px;
+            border-radius: 15px;
             position: relative;
             overflow: hidden;
             margin: 20px 0;
@@ -671,15 +722,27 @@
 
         .crash-rocket {
             position: absolute;
-            bottom: 10px;
+            bottom: 20px;
             left: 50%;
-            width: 30px;
-            height: 45px;
-            background: linear-gradient(to bottom, #2196F3, #0D47A1);
+            width: 40px;
+            height: 60px;
+            background: linear-gradient(to bottom, #ff9800, #ff5722);
             clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
             transform: translateX(-50%);
             z-index: 20;
-            transition: bottom 0.1s ease-out;
+            transition: bottom 0.3s ease-out;
+            filter: drop-shadow(0 0 10px rgba(255, 152, 0, 0.7));
+        }
+
+        .crash-rocket::before {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 15px;
+            width: 10px;
+            height: 20px;
+            background: linear-gradient(to bottom, #ff5722, #d32f2f);
+            border-radius: 2px;
         }
 
         .crash-multiplier {
@@ -689,6 +752,8 @@
             margin: 15px 0;
             text-align: center;
             height: 50px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            transition: all 0.3s;
         }
 
         .crash-buttons {
@@ -706,6 +771,7 @@
             border: none;
             cursor: pointer;
             transition: all 0.3s;
+            min-width: 150px;
         }
 
         .crash-btn-bet {
@@ -729,12 +795,22 @@
             border: 2px solid transparent;
             font-weight: bold;
             font-size: 14px;
+            text-align: center;
+            min-width: 120px;
         }
 
         .dice-bet-choice:hover,
         .dice-bet-choice.active {
             background: linear-gradient(to right, #7b1fa2, #9c27b0);
             border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .dice-explanation {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 5px;
+            text-align: center;
         }
 
         .game-result {
@@ -752,10 +828,12 @@
 
         .win {
             color: #4CAF50;
+            text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
         }
 
         .loss {
             color: #f44336;
+            text-shadow: 0 0 5px rgba(244, 67, 54, 0.5);
         }
 
         .history {
@@ -809,6 +887,31 @@
             font-size: 12px;
         }
 
+        .bet-amount-display {
+            font-size: 16px;
+            color: #ffd700;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .selected-bets-display {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #ffd700;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .bet-type {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.2);
+            padding: 3px 8px;
+            border-radius: 5px;
+            margin: 2px;
+            font-size: 12px;
+        }
+
         @media (min-width: 768px) and (max-width: 1023px) {
             .games-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -821,7 +924,7 @@
             }
             
             .plinko-board {
-                height: 400px;
+                height: 350px;
             }
             
             .game-controls {
@@ -842,11 +945,15 @@
             }
             
             .crash-container {
-                height: 250px;
+                height: 300px;
             }
             
             .crash-multiplier {
                 font-size: 42px;
+            }
+            
+            .dice-bet-choice {
+                min-width: 140px;
             }
         }
 
@@ -863,7 +970,7 @@
             
             .plinko-board {
                 height: 450px;
-                max-width: 600px;
+                max-width: 700px;
             }
             
             .game-controls {
@@ -884,11 +991,15 @@
             }
             
             .crash-container {
-                height: 300px;
+                height: 350px;
             }
             
             .crash-multiplier {
                 font-size: 48px;
+            }
+            
+            .dice-bet-choice {
+                min-width: 160px;
             }
         }
 
@@ -927,6 +1038,13 @@
             .crash-btn {
                 padding: 10px 15px;
                 font-size: 14px;
+                min-width: 120px;
+            }
+            
+            .dice-bet-choice {
+                min-width: 100px;
+                padding: 8px 10px;
+                font-size: 12px;
             }
         }
     </style>
@@ -993,7 +1111,7 @@
                         <h3 class="game-card-title"><i class="fas fa-circle"></i> Рулетка</h3>
                     </div>
                     <div class="game-card-body">
-                        <p class="game-card-desc">Европейская рулетка с числами 0-36</p>
+                        <p class="game-card-desc">Европейская рулетка с множественными ставками</p>
                         <button class="play-btn">Играть</button>
                     </div>
                 </div>
@@ -1013,7 +1131,7 @@
                         <h3 class="game-card-title"><i class="fas fa-dice-six"></i> Кости</h3>
                     </div>
                     <div class="game-card-body">
-                        <p class="game-card-desc">Бросайте кости и угадывайте результат</p>
+                        <p class="game-card-desc">Бросайте кости с понятными ставками</p>
                         <button class="play-btn">Играть</button>
                     </div>
                 </div>
@@ -1023,7 +1141,7 @@
                         <h3 class="game-card-title"><i class="fas fa-bullseye"></i> Плинко</h3>
                     </div>
                     <div class="game-card-body">
-                        <p class="game-card-desc">Бросьте шарик и следите за его падением</p>
+                        <p class="game-card-desc">Бросьте шарик и следите за его падением через штырьки</p>
                         <button class="play-btn">Играть</button>
                     </div>
                 </div>
@@ -1050,7 +1168,7 @@
             </div>
         </div>
 
-        <!-- Слот-машина -->
+        <!-- Слот-машина (без изменений) -->
         <div class="game-section" id="slots-section">
             <h2 class="section-title"><i class="fas fa-dice"></i> Слот-машина</h2>
             <div class="game-area">
@@ -1083,7 +1201,7 @@
             </div>
         </div>
 
-        <!-- Рулетка -->
+        <!-- Рулетка с множественными ставками -->
         <div class="game-section" id="roulette-section">
             <h2 class="section-title"><i class="fas fa-circle"></i> Рулетка</h2>
             <div class="game-area">
@@ -1095,8 +1213,13 @@
                         <button class="bet-btn" data-bet="500">$500</button>
                         <button class="allin-btn" id="roulette-allin">All In</button>
                         <input type="number" class="bet-input" id="roulette-bet" value="10" min="1">
+                        <div class="bet-amount-display">Ставка: $<span id="current-roulette-bet">10</span></div>
                     </div>
                     <button class="spin-btn" id="roulette-spin-btn">КРУТИТЬ РУЛЕТКУ!</button>
+                </div>
+                
+                <div class="selected-bets-display" id="selected-bets-display">
+                    Выбранные ставки: <span id="selected-bets-list">Нет</span>
                 </div>
                 
                 <div class="roulette-table">
@@ -1109,15 +1232,15 @@
                         <div class="roulette-bet" data-bet-type="odd">Нечетное</div>
                         <div class="roulette-bet" data-bet-type="1-18">1-18</div>
                         <div class="roulette-bet" data-bet-type="19-36">19-36</div>
-                    </div>
-                    
-                    <div style="text-align: center; margin-top: 15px; font-size: 16px;">
-                        <div>Выбранная ставка: <span id="selected-bet" style="color:#ffd700">Не выбрана</span></div>
+                        <div class="roulette-bet roulette-multi-bet" data-bet-type="red-even">Красное + Четное</div>
+                        <div class="roulette-bet roulette-multi-bet" data-bet-type="black-odd">Черное + Нечетное</div>
+                        <div class="roulette-bet roulette-multi-bet" data-bet-type="red-1-18">Красное + 1-18</div>
+                        <div class="roulette-bet roulette-multi-bet" data-bet-type="black-19-36">Черное + 19-36</div>
                     </div>
                 </div>
                 
                 <div class="game-result" id="roulette-result">
-                    Выберите ставку и нажмите "Крутить рулетку!"
+                    Выберите ставки (можно несколько) и нажмите "Крутить рулетку!"
                 </div>
                 
                 <div class="history">
@@ -1127,7 +1250,7 @@
             </div>
         </div>
 
-        <!-- Блэкджек -->
+        <!-- Блэкджек с измененной иконкой -->
         <div class="game-section" id="blackjack-section">
             <h2 class="section-title"><i class="fas fa-id-card"></i> Блэкджек</h2>
             <div class="game-area">
@@ -1139,6 +1262,7 @@
                         <button class="bet-btn" data-bet="500">$500</button>
                         <button class="allin-btn" id="blackjack-allin">All In</button>
                         <input type="number" class="bet-input" id="blackjack-bet" value="10" min="1">
+                        <div class="bet-amount-display">Ставка: $<span id="current-blackjack-bet">10</span></div>
                     </div>
                     <button class="spin-btn" id="deal-btn">РАЗДАТЬ КАРТЫ!</button>
                 </div>
@@ -1170,7 +1294,7 @@
             </div>
         </div>
 
-        <!-- Кости -->
+        <!-- Кости с объяснениями -->
         <div class="game-section" id="dice-section">
             <h2 class="section-title"><i class="fas fa-dice-six"></i> Кости</h2>
             <div class="game-area">
@@ -1182,17 +1306,34 @@
                         <button class="bet-btn" data-bet="500">$500</button>
                         <button class="allin-btn" id="dice-allin">All In</button>
                         <input type="number" class="bet-input" id="dice-bet" value="10" min="1">
+                        <div class="bet-amount-display">Ставка: $<span id="current-dice-bet">10</span></div>
                     </div>
                     <button class="spin-btn" id="roll-dice-btn">БРОСИТЬ КОСТИ!</button>
                 </div>
                 
                 <div style="text-align: center; margin: 20px 0;">
-                    <h3 style="color:#ffd700; margin-bottom: 15px;">Ваш выбор:</h3>
+                    <h3 style="color:#ffd700; margin-bottom: 15px;">Выберите ставку:</h3>
                     <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
-                        <button class="dice-bet-choice" data-choice="high">Больше 3.5</button>
-                        <button class="dice-bet-choice" data-choice="low">Меньше 3.5</button>
-                        <button class="dice-bet-choice" data-choice="even">Четное</button>
-                        <button class="dice-bet-choice" data-choice="odd">Нечетное</button>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <button class="dice-bet-choice" data-choice="high">Больше 7</button>
+                            <div class="dice-explanation">Сумма 8-12</div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <button class="dice-bet-choice" data-choice="low">Меньше 7</button>
+                            <div class="dice-explanation">Сумма 2-6</div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <button class="dice-bet-choice" data-choice="seven">Ровно 7</button>
+                            <div class="dice-explanation">Выигрыш 4x</div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <button class="dice-bet-choice" data-choice="even">Четное</button>
+                            <div class="dice-explanation">Сумма 2,4,6,8,10,12</div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <button class="dice-bet-choice" data-choice="odd">Нечетное</button>
+                            <div class="dice-explanation">Сумма 3,5,7,9,11</div>
+                        </div>
                     </div>
                     <div style="margin-top: 15px; font-size: 16px;">Выбранная ставка: <span id="selected-dice-bet" style="color:#ffd700">Не выбрана</span></div>
                 </div>
@@ -1224,7 +1365,7 @@
             </div>
         </div>
 
-        <!-- Плинко -->
+        <!-- Плинко - полностью переработанный -->
         <div class="game-section" id="plinko-section">
             <h2 class="section-title"><i class="fas fa-bullseye"></i> Плинко</h2>
             <div class="game-area">
@@ -1236,6 +1377,7 @@
                         <button class="bet-btn" data-bet="500">$500</button>
                         <button class="allin-btn" id="plinko-allin">All In</button>
                         <input type="number" class="bet-input" id="plinko-bet" value="10" min="1">
+                        <div class="bet-amount-display">Ставка: $<span id="current-plinko-bet">10</span></div>
                     </div>
                     <button class="spin-btn" id="drop-plinko-btn">БРОСИТЬ ШАРИК!</button>
                 </div>
@@ -1258,7 +1400,7 @@
             </div>
         </div>
 
-        <!-- Краш -->
+        <!-- Краш с улучшенной ракетой -->
         <div class="game-section" id="crash-section">
             <h2 class="section-title"><i class="fas fa-rocket"></i> Краш</h2>
             <div class="game-area">
@@ -1270,6 +1412,7 @@
                         <button class="bet-btn" data-bet="500">$500</button>
                         <button class="allin-btn" id="crash-allin">All In</button>
                         <input type="number" class="bet-input" id="crash-bet" value="10" min="1">
+                        <div class="bet-amount-display">Ставка: $<span id="current-crash-bet">10</span></div>
                     </div>
                     <button class="spin-btn" id="place-crash-bet-btn">СДЕЛАТЬ СТАВКУ</button>
                 </div>
@@ -1296,7 +1439,7 @@
             </div>
         </div>
 
-        <!-- Мины -->
+        <!-- Мины без изменений -->
         <div class="game-section" id="mines-section">
             <h2 class="section-title"><i class="fas fa-bomb"></i> Мины</h2>
             <div class="game-area">
@@ -1308,6 +1451,7 @@
                         <button class="bet-btn" data-bet="500">$500</button>
                         <button class="allin-btn" id="mines-allin">All In</button>
                         <input type="number" class="bet-input" id="mines-bet" value="10" min="1">
+                        <div class="bet-amount-display">Ставка: $<span id="current-mines-bet">10</span></div>
                     </div>
                     <button class="spin-btn" id="start-mines-btn">НАЧАТЬ ИГРУ</button>
                     <button class="bet-btn" id="cashout-mines-btn" style="display: none;">ЗАБРАТЬ ВЫИГРЫШ</button>
@@ -1339,7 +1483,7 @@
     </div>
 
     <script>
-        // Полный JavaScript код начинается здесь
+        // Полный JavaScript код
         let balance = 1000;
         let gameHistory = [];
         
@@ -1397,6 +1541,7 @@
                 initPlinko();
             } else if (sectionId === 'roulette') {
                 createRouletteNumbers();
+                updateSelectedBetsDisplay();
             } else if (sectionId === 'mines') {
                 createMinesGrid();
             } else if (sectionId === 'crash') {
@@ -1494,7 +1639,7 @@
             };
         }
         
-        // СЛОТ-МАШИНА
+        // СЛОТ-МАШИНА (без изменений)
         const slotBetControls = setupBetControls('slot');
         const slotSymbols = ['🍒', '🍋', '🍊', '🍉', '⭐', '7️⃣'];
         let isSpinning = false;
@@ -1579,9 +1724,10 @@
             spinAnimation();
         });
         
-        // РУЛЕТКА
+        // РУЛЕТКА с множественными ставками
         const rouletteBetControls = setupBetControls('roulette');
-        let selectedRouletteBet = null;
+        let selectedRouletteNumbers = new Set();
+        let selectedRouletteBets = new Set();
         let isRouletteSpinning = false;
         
         function createRouletteNumbers() {
@@ -1614,16 +1760,16 @@
                 numberElement.addEventListener('click', function() {
                     if (isRouletteSpinning) return;
                     
-                    selectedRouletteBet = {
-                        type: 'number',
-                        value: parseInt(this.dataset.number),
-                        color: this.dataset.color
-                    };
-                    updateSelectedBetDisplay();
+                    const num = parseInt(this.dataset.number);
+                    if (selectedRouletteNumbers.has(num)) {
+                        selectedRouletteNumbers.delete(num);
+                        this.classList.remove('selected');
+                    } else {
+                        selectedRouletteNumbers.add(num);
+                        this.classList.add('selected');
+                    }
                     
-                    document.querySelectorAll('.roulette-bet').forEach(bet => {
-                        bet.classList.remove('active');
-                    });
+                    updateSelectedBetsDisplay();
                 });
             });
             
@@ -1631,71 +1777,93 @@
                 bet.addEventListener('click', function() {
                     if (isRouletteSpinning) return;
                     
-                    selectedRouletteBet = {
-                        type: this.dataset.betType
-                    };
-                    updateSelectedBetDisplay();
+                    const betType = this.dataset.betType;
+                    if (selectedRouletteBets.has(betType)) {
+                        selectedRouletteBets.delete(betType);
+                        this.classList.remove('selected');
+                    } else {
+                        selectedRouletteBets.add(betType);
+                        this.classList.add('selected');
+                    }
                     
-                    document.querySelectorAll('.roulette-bet').forEach(b => {
-                        b.classList.remove('active');
-                    });
-                    this.classList.add('active');
-                    
-                    document.querySelectorAll('.roulette-number').forEach(num => {
-                        num.style.boxShadow = 'none';
-                    });
+                    updateSelectedBetsDisplay();
                 });
             });
         }
         
-        function updateSelectedBetDisplay() {
-            const selectedBetElement = document.getElementById('selected-bet');
-            if (!selectedBetElement) return;
+        function updateSelectedBetsDisplay() {
+            const selectedBetsList = document.getElementById('selected-bets-list');
+            if (!selectedBetsList) return;
             
-            if (!selectedRouletteBet) {
-                selectedBetElement.textContent = 'Не выбрана';
-                return;
+            const selectedItems = [];
+            
+            if (selectedRouletteNumbers.size > 0) {
+                const numbers = Array.from(selectedRouletteNumbers).sort((a, b) => a - b);
+                selectedItems.push(`Числа: ${numbers.join(', ')}`);
             }
             
-            if (selectedRouletteBet.type === 'number') {
-                selectedBetElement.textContent = `Число ${selectedRouletteBet.value}`;
-                
-                document.querySelectorAll('.roulette-number').forEach(num => {
-                    if (parseInt(num.dataset.number) === selectedRouletteBet.value) {
-                        num.style.boxShadow = '0 0 8px 2px gold';
-                    } else {
-                        num.style.boxShadow = 'none';
+            if (selectedRouletteBets.size > 0) {
+                const betNames = Array.from(selectedRouletteBets).map(bet => {
+                    switch(bet) {
+                        case 'red': return 'Красное';
+                        case 'black': return 'Черное';
+                        case 'even': return 'Четное';
+                        case 'odd': return 'Нечетное';
+                        case '1-18': return '1-18';
+                        case '19-36': return '19-36';
+                        case 'red-even': return 'Красное+Четное';
+                        case 'black-odd': return 'Черное+Нечетное';
+                        case 'red-1-18': return 'Красное+1-18';
+                        case 'black-19-36': return 'Черное+19-36';
+                        default: return bet;
                     }
                 });
+                selectedItems.push(...betNames);
+            }
+            
+            if (selectedItems.length === 0) {
+                selectedBetsList.innerHTML = 'Нет';
             } else {
-                let betName = '';
-                switch(selectedRouletteBet.type) {
-                    case 'red': betName = 'Красное'; break;
-                    case 'black': betName = 'Черное'; break;
-                    case 'even': betName = 'Четное'; break;
-                    case 'odd': betName = 'Нечетное'; break;
-                    case '1-18': betName = '1-18'; break;
-                    case '19-36': betName = '19-36'; break;
-                }
-                selectedBetElement.textContent = betName;
-                
-                document.querySelectorAll('.roulette-number').forEach(num => {
-                    num.style.boxShadow = 'none';
-                });
+                selectedBetsList.innerHTML = selectedItems.map(item => 
+                    `<span class="bet-type">${item}</span>`
+                ).join('');
+            }
+        }
+        
+        function checkMultiBetWin(winningNumber, winningColor, betType) {
+            const isEven = winningNumber !== 0 && winningNumber % 2 === 0;
+            const isOdd = winningNumber % 2 === 1;
+            const is1to18 = winningNumber >= 1 && winningNumber <= 18;
+            const is19to36 = winningNumber >= 19 && winningNumber <= 36;
+            
+            switch(betType) {
+                case 'red-even':
+                    return winningColor === 'red' && isEven;
+                case 'black-odd':
+                    return winningColor === 'black' && isOdd;
+                case 'red-1-18':
+                    return winningColor === 'red' && is1to18;
+                case 'black-19-36':
+                    return winningColor === 'black' && is19to36;
+                default:
+                    return false;
             }
         }
         
         document.getElementById('roulette-spin-btn').addEventListener('click', function() {
             if (isRouletteSpinning) return;
             
-            if (!selectedRouletteBet) {
-                document.getElementById('roulette-result').innerHTML = '<span class="loss">Выберите ставку!</span>';
+            if (selectedRouletteNumbers.size === 0 && selectedRouletteBets.size === 0) {
+                document.getElementById('roulette-result').innerHTML = '<span class="loss">Выберите хотя бы одну ставку!</span>';
                 return;
             }
             
             const bet = rouletteBetControls.getBet();
-            if (bet > balance) {
-                document.getElementById('roulette-result').innerHTML = '<span class="loss">Недостаточно средств!</span>';
+            const totalBets = selectedRouletteNumbers.size + selectedRouletteBets.size;
+            const totalBetAmount = bet * totalBets;
+            
+            if (totalBetAmount > balance) {
+                document.getElementById('roulette-result').innerHTML = `<span class="loss">Недостаточно средств! Нужно $${totalBetAmount}</span>`;
                 return;
             }
             
@@ -1704,7 +1872,7 @@
                 return;
             }
             
-            balance -= bet;
+            balance -= totalBetAmount;
             updateBalance();
             
             isRouletteSpinning = true;
@@ -1724,10 +1892,10 @@
             
             const spinInterval = setInterval(() => {
                 numbers.forEach(num => {
-                    num.style.boxShadow = 'none';
+                    num.classList.remove('selected');
                 });
                 
-                numbers[currentIndex].style.boxShadow = '0 0 8px 2px gold';
+                numbers[currentIndex].classList.add('selected');
                 
                 currentIndex = (currentIndex + 1) % numbers.length;
                 counter++;
@@ -1737,66 +1905,99 @@
                     
                     const winningElement = Array.from(numbers).find(num => parseInt(num.dataset.number) === winningNumber);
                     if (winningElement) {
-                        winningElement.style.boxShadow = '0 0 12px 3px #4CAF50';
+                        winningElement.classList.add('selected');
+                        winningElement.style.boxShadow = '0 0 15px 3px #4CAF50';
                     }
                     
-                    let winAmount = 0;
-                    let resultText = '';
-                    let isWin = false;
+                    let totalWinAmount = 0;
+                    let winDetails = [];
                     
-                    if (selectedRouletteBet.type === 'number') {
-                        if (selectedRouletteBet.value === winningNumber) {
-                            winAmount = bet * 36;
-                            resultText = `Выигрыш! Выпало число ${winningNumber}`;
-                            isWin = true;
-                        } else {
-                            resultText = `Проигрыш. Выпало число ${winningNumber}`;
+                    // Проверяем выигрыши по числам
+                    selectedRouletteNumbers.forEach(num => {
+                        if (num === winningNumber) {
+                            const winAmount = bet * 36;
+                            totalWinAmount += winAmount;
+                            winDetails.push(`Число ${num}: +$${winAmount}`);
                         }
-                    } else {
+                    });
+                    
+                    // Проверяем выигрыши по типам ставок
+                    selectedRouletteBets.forEach(betType => {
                         let conditionMet = false;
-                        switch(selectedRouletteBet.type) {
-                            case 'red':
-                                conditionMet = winningColor === 'red';
-                                break;
-                            case 'black':
-                                conditionMet = winningColor === 'black';
-                                break;
-                            case 'even':
-                                conditionMet = winningNumber !== 0 && winningNumber % 2 === 0;
-                                break;
-                            case 'odd':
-                                conditionMet = winningNumber % 2 === 1;
-                                break;
-                            case '1-18':
-                                conditionMet = winningNumber >= 1 && winningNumber <= 18;
-                                break;
-                            case '19-36':
-                                conditionMet = winningNumber >= 19 && winningNumber <= 36;
-                                break;
+                        let multiplier = 2;
+                        
+                        if (['red-even', 'black-odd', 'red-1-18', 'black-19-36'].includes(betType)) {
+                            conditionMet = checkMultiBetWin(winningNumber, winningColor, betType);
+                            multiplier = 3; // Меньший множитель за сложные ставки
+                        } else {
+                            switch(betType) {
+                                case 'red':
+                                    conditionMet = winningColor === 'red';
+                                    break;
+                                case 'black':
+                                    conditionMet = winningColor === 'black';
+                                    break;
+                                case 'even':
+                                    conditionMet = winningNumber !== 0 && winningNumber % 2 === 0;
+                                    break;
+                                case 'odd':
+                                    conditionMet = winningNumber % 2 === 1;
+                                    break;
+                                case '1-18':
+                                    conditionMet = winningNumber >= 1 && winningNumber <= 18;
+                                    break;
+                                case '19-36':
+                                    conditionMet = winningNumber >= 19 && winningNumber <= 36;
+                                    break;
+                            }
                         }
                         
                         if (conditionMet) {
-                            winAmount = bet * 2;
-                            resultText = `Выигрыш! Выпало число ${winningNumber}`;
-                            isWin = true;
-                        } else {
-                            resultText = `Проигрыш. Выпало число ${winningNumber}`;
+                            const winAmount = bet * multiplier;
+                            totalWinAmount += winAmount;
+                            let betName = '';
+                            switch(betType) {
+                                case 'red': betName = 'Красное'; break;
+                                case 'black': betName = 'Черное'; break;
+                                case 'even': betName = 'Четное'; break;
+                                case 'odd': betName = 'Нечетное'; break;
+                                case '1-18': betName = '1-18'; break;
+                                case '19-36': betName = '19-36'; break;
+                                case 'red-even': betName = 'Красное+Четное'; break;
+                                case 'black-odd': betName = 'Черное+Нечетное'; break;
+                                case 'red-1-18': betName = 'Красное+1-18'; break;
+                                case 'black-19-36': betName = 'Черное+19-36'; break;
+                            }
+                            winDetails.push(`${betName}: +$${winAmount}`);
                         }
-                    }
+                    });
                     
-                    if (winAmount > 0) {
-                        balance += winAmount;
+                    if (totalWinAmount > 0) {
+                        balance += totalWinAmount;
                         updateBalance();
-                        document.getElementById('roulette-result').innerHTML = `<span class="win">${resultText} Вы выиграли $${winAmount}!</span>`;
-                        addToHistory('roulette', resultText, winAmount, true);
+                        const resultText = `Выпало ${winningNumber} (${winningColor === 'red' ? 'красное' : winningColor === 'black' ? 'черное' : 'зеленое'})`;
+                        const winText = winDetails.join(', ');
+                        document.getElementById('roulette-result').innerHTML = `<span class="win">${resultText}<br>${winText}<br>Общий выигрыш: $${totalWinAmount}!</span>`;
+                        addToHistory('roulette', `${resultText} - ${winDetails.length} выигрышей`, totalWinAmount - totalBetAmount, true);
                     } else {
-                        document.getElementById('roulette-result').innerHTML = `<span class="loss">${resultText} Вы проиграли $${bet}.</span>`;
-                        addToHistory('roulette', resultText, bet, false);
+                        const resultText = `Выпало ${winningNumber} (${winningColor === 'red' ? 'красное' : winningColor === 'black' ? 'черное' : 'зеленое'})`;
+                        document.getElementById('roulette-result').innerHTML = `<span class="loss">${resultText}<br>Вы проиграли $${totalBetAmount}.</span>`;
+                        addToHistory('roulette', resultText, totalBetAmount, false);
                     }
                     
                     isRouletteSpinning = false;
                     this.disabled = false;
                     this.textContent = 'КРУТИТЬ РУЛЕТКУ!';
+                    
+                    // Сброс выбора через 3 секунды
+                    setTimeout(() => {
+                        selectedRouletteNumbers.clear();
+                        selectedRouletteBets.clear();
+                        document.querySelectorAll('.roulette-number.selected, .roulette-bet.selected').forEach(el => {
+                            el.classList.remove('selected');
+                        });
+                        updateSelectedBetsDisplay();
+                    }, 3000);
                 }
             }, 100);
         });
@@ -1868,8 +2069,8 @@
                 cardElement.classList.add(card.suit === '♥' || card.suit === '♦' ? 'red' : 'black');
                 
                 if (hideSecondCard && index === 1) {
-                    cardElement.textContent = '?';
-                    cardElement.style.background = '#1a1a2e';
+                    cardElement.classList.add('card-back');
+                    cardElement.innerHTML = '<i class="fas fa-question"></i>';
                 } else {
                     cardElement.textContent = card.value;
                     const suitElement = document.createElement('div');
@@ -2031,7 +2232,7 @@
             document.getElementById('deal-btn').style.display = 'inline-block';
         }
         
-        // КОСТИ
+        // КОСТИ с объяснениями
         const diceBetControls = setupBetControls('dice');
         let selectedDiceBet = null;
         let isDiceRolling = false;
@@ -2110,22 +2311,27 @@
                         case 'high':
                             isWin = sum > 7;
                             winAmount = isWin ? bet * 2 : 0;
-                            resultText = `Сумма: ${sum} (${isWin ? '>7' : '≤7'})`;
+                            resultText = `Сумма: ${sum} (${sum > 7 ? '>7 - ВЫИГРЫШ!' : '≤7 - проигрыш'})`;
                             break;
                         case 'low':
                             isWin = sum < 7;
                             winAmount = isWin ? bet * 2 : 0;
-                            resultText = `Сумма: ${sum} (${isWin ? '<7' : '≥7'})`;
+                            resultText = `Сумма: ${sum} (${sum < 7 ? '<7 - ВЫИГРЫШ!' : '≥7 - проигрыш'})`;
+                            break;
+                        case 'seven':
+                            isWin = sum === 7;
+                            winAmount = isWin ? bet * 4 : 0;
+                            resultText = `Сумма: ${sum} (${sum === 7 ? '=7 - ДЖЕКПОТ 4x!' : 'не 7 - проигрыш'})`;
                             break;
                         case 'even':
                             isWin = sum % 2 === 0;
                             winAmount = isWin ? bet * 2 : 0;
-                            resultText = `Сумма: ${sum} (${isWin ? 'четное' : 'нечетное'})`;
+                            resultText = `Сумма: ${sum} (${sum % 2 === 0 ? 'четное - ВЫИГРЫШ!' : 'нечетное - проигрыш'})`;
                             break;
                         case 'odd':
                             isWin = sum % 2 === 1;
                             winAmount = isWin ? bet * 2 : 0;
-                            resultText = `Сумма: ${sum} (${isWin ? 'нечетное' : 'четное'})`;
+                            resultText = `Сумма: ${sum} (${sum % 2 === 1 ? 'нечетное - ВЫИГРЫШ!' : 'четное - проигрыш'})`;
                             break;
                     }
                     
@@ -2146,7 +2352,7 @@
             }, 100);
         });
         
-        // ПЛИНКО
+        // ПЛИНКО - полностью переработанный
         const plinkoBetControls = setupBetControls('plinko');
         let isPlinkoActive = false;
         let plinkoAnimationFrame = null;
@@ -2160,33 +2366,43 @@
             board.innerHTML = '';
             slotsContainer.innerHTML = '';
             
-            // Создаем штырьки
-            const rows = 8;
+            // Создаем штырьки в виде треугольника
+            const rows = 12;
             const boardWidth = board.offsetWidth;
             const boardHeight = board.offsetHeight;
-            const pinSpacingX = boardWidth / (rows + 1);
-            const pinSpacingY = (boardHeight - 100) / (rows + 1);
+            const pinRadius = 6;
+            const verticalSpacing = (boardHeight - 100) / rows;
+            const horizontalSpacing = boardWidth / 10;
             
             for (let row = 0; row < rows; row++) {
                 const pinsInRow = row + 1;
-                const rowStartX = (boardWidth - (pinsInRow * pinSpacingX)) / 2;
+                const rowStartX = (boardWidth - (pinsInRow * horizontalSpacing)) / 2;
                 
                 for (let col = 0; col < pinsInRow; col++) {
                     const pin = document.createElement('div');
                     pin.className = 'plinko-pin';
-                    pin.style.left = `${rowStartX + col * pinSpacingX}px`;
-                    pin.style.top = `${50 + row * pinSpacingY}px`;
+                    
+                    // Добавляем небольшую случайность для реалистичности
+                    const randomOffsetX = (Math.random() - 0.5) * 5;
+                    const randomOffsetY = (Math.random() - 0.5) * 5;
+                    
+                    const x = rowStartX + col * horizontalSpacing + randomOffsetX;
+                    const y = 30 + row * verticalSpacing + randomOffsetY;
+                    
+                    pin.style.left = `${x - pinRadius}px`;
+                    pin.style.top = `${y - pinRadius}px`;
                     board.appendChild(pin);
                 }
             }
             
             // Создаем слоты с множителями
-            const multipliers = ['0.5x', '1x', '2x', '5x', '10x', '5x', '2x', '1x', '0.5x'];
+            const multipliers = ['0x', '0.5x', '1x', '1.5x', '5x', '1.5x', '1x', '0.5x', '0x'];
             for (let i = 0; i < 9; i++) {
                 const slot = document.createElement('div');
                 slot.className = 'plinko-slot';
                 slot.textContent = multipliers[i];
                 slot.dataset.multiplier = multipliers[i].replace('x', '');
+                slot.dataset.index = i;
                 slotsContainer.appendChild(slot);
             }
         }
@@ -2215,73 +2431,132 @@
             const board = document.getElementById('plinko-board');
             const ball = document.createElement('div');
             ball.className = 'plinko-ball';
-            const startX = board.offsetWidth / 2 - 8;
+            const startX = board.offsetWidth / 2 - 9;
             ball.style.left = `${startX}px`;
-            ball.style.top = '20px';
+            ball.style.top = '10px';
             board.appendChild(ball);
             
             document.querySelectorAll('.plinko-slot').forEach(slot => {
                 slot.classList.remove('active');
             });
             
+            // Физика шарика
             let posX = startX;
-            let posY = 20;
-            let velocityX = (Math.random() - 0.5) * 2;
+            let posY = 10;
+            let velocityX = 0;
             let velocityY = 0;
-            const gravity = 0.3;
-            const bounce = 0.7;
-            const ballRadius = 8;
+            const gravity = 0.15;
+            const friction = 0.98;
+            const ballRadius = 9;
+            const pins = document.querySelectorAll('.plinko-pin');
+            const pinRadius = 6;
+            
+            let lastCollisionTime = 0;
+            const collisionCooldown = 100; // мс
             
             function animate() {
+                const currentTime = Date.now();
+                
+                // Гравитация
                 velocityY += gravity;
                 
-                velocityX += (Math.random() - 0.5) * 0.5;
-                velocityX = Math.max(-3, Math.min(3, velocityX));
+                // Случайные небольшие отклонения для реалистичности
+                if (Math.random() < 0.1) {
+                    velocityX += (Math.random() - 0.5) * 0.3;
+                }
                 
+                // Обновляем позицию
                 posX += velocityX;
                 posY += velocityY;
                 
-                if (posX <= 0) {
-                    posX = 0;
-                    velocityX = Math.abs(velocityX) * bounce;
-                }
-                if (posX >= board.offsetWidth - 16) {
-                    posX = board.offsetWidth - 16;
-                    velocityX = -Math.abs(velocityX) * bounce;
+                // Столкновение с штырьками
+                if (currentTime - lastCollisionTime > collisionCooldown) {
+                    pins.forEach(pin => {
+                        const pinRect = pin.getBoundingClientRect();
+                        const boardRect = board.getBoundingClientRect();
+                        
+                        const pinX = pinRect.left - boardRect.left + pinRadius;
+                        const pinY = pinRect.top - boardRect.top + pinRadius;
+                        
+                        const dx = (posX + ballRadius) - pinX;
+                        const dy = (posY + ballRadius) - pinY;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < ballRadius + pinRadius) {
+                            lastCollisionTime = currentTime;
+                            
+                            // Отскок от штырька
+                            const normalX = dx / distance;
+                            const normalY = dy / distance;
+                            
+                            const dotProduct = velocityX * normalX + velocityY * normalY;
+                            
+                            velocityX = velocityX - 2 * dotProduct * normalX;
+                            velocityY = velocityY - 2 * dotProduct * normalY;
+                            
+                            // Потеря энергии при столкновении
+                            velocityX *= 0.7;
+                            velocityY *= 0.7;
+                            
+                            // Отодвигаем шарик от штырька
+                            const overlap = (ballRadius + pinRadius) - distance;
+                            posX += normalX * overlap;
+                            posY += normalY * overlap;
+                        }
+                    });
                 }
                 
+                // Столкновение со стенами
+                if (posX <= 0) {
+                    posX = 0;
+                    velocityX = Math.abs(velocityX) * 0.8;
+                }
+                if (posX >= board.offsetWidth - 18) {
+                    posX = board.offsetWidth - 18;
+                    velocityX = -Math.abs(velocityX) * 0.8;
+                }
+                
+                // Трение
+                velocityX *= friction;
+                
+                // Обновляем позицию шарика
                 ball.style.left = `${posX}px`;
                 ball.style.top = `${posY}px`;
                 
-                if (posY >= board.offsetHeight - 40) {
+                // Проверяем, достиг ли шарик низа
+                if (posY >= board.offsetHeight - 50) {
+                    // Определяем слот
                     const slotWidth = board.offsetWidth / 9;
                     const slotIndex = Math.min(8, Math.floor(posX / slotWidth));
                     const multiplier = parseFloat(document.querySelectorAll('.plinko-slot')[slotIndex].dataset.multiplier);
                     const winAmount = Math.round(bet * multiplier * 100) / 100;
                     
+                    // Подсвечиваем выигравший слот
                     document.querySelectorAll('.plinko-slot')[slotIndex].classList.add('active');
                     
+                    // Начисляем выигрыш
                     balance += winAmount;
                     updateBalance();
                     
                     const netWin = winAmount - bet;
                     if (netWin > 0) {
-                        document.getElementById('plinko-result').innerHTML = `<span class="win">Шарик в слоте ${multiplier}x! Вы выиграли $${netWin.toFixed(2)}!</span>`;
+                        document.getElementById('plinko-result').innerHTML = `<span class="win">Шарик попал в слот ${multiplier}x! Вы выиграли $${netWin.toFixed(2)}!</span>`;
                         addToHistory('plinko', `Слот ${multiplier}x`, netWin.toFixed(2), true);
                     } else if (netWin === 0) {
-                        document.getElementById('plinko-result').innerHTML = `<span>Шарик в слоте ${multiplier}x. Ставка возвращена.</span>`;
+                        document.getElementById('plinko-result').innerHTML = `<span>Шарик попал в слот ${multiplier}x. Ставка возвращена.</span>`;
                         addToHistory('plinko', `Слот ${multiplier}x`, 0, false);
                     } else {
-                        document.getElementById('plinko-result').innerHTML = `<span class="loss">Шарик в слоте ${multiplier}x. Вы проиграли $${Math.abs(netWin).toFixed(2)}.</span>`;
+                        document.getElementById('plinko-result').innerHTML = `<span class="loss">Шарик попал в слот ${multiplier}x. Вы проиграли $${Math.abs(netWin).toFixed(2)}.</span>`;
                         addToHistory('plinko', `Слот ${multiplier}x`, Math.abs(netWin).toFixed(2), false);
                     }
                     
+                    // Удаляем шарик с задержкой
                     setTimeout(() => {
                         ball.remove();
                         isPlinkoActive = false;
                         document.getElementById('drop-plinko-btn').disabled = false;
                         document.getElementById('drop-plinko-btn').textContent = 'БРОСИТЬ ШАРИК!';
-                    }, 1000);
+                    }, 1500);
                     
                     if (plinkoAnimationFrame) {
                         cancelAnimationFrame(plinkoAnimationFrame);
@@ -2295,7 +2570,7 @@
             animate();
         });
         
-        // КРАШ
+        // КРАШ с улучшенной ракетой
         const crashBetControls = setupBetControls('crash');
         let crashGameActive = false;
         let crashMultiplier = 1.0;
@@ -2310,11 +2585,15 @@
             crashMultiplier = 1.0;
             
             const rocket = document.getElementById('crash-rocket');
-            rocket.style.bottom = '10px';
-            rocket.style.background = 'linear-gradient(to bottom, #2196F3, #0D47A1)';
+            rocket.style.bottom = '20px';
+            rocket.style.background = 'linear-gradient(to bottom, #ff9800, #ff5722)';
+            rocket.style.opacity = '1';
+            rocket.style.transform = 'translateX(-50%) scale(1)';
+            rocket.style.filter = 'drop-shadow(0 0 10px rgba(255, 152, 0, 0.7))';
             
             document.getElementById('crash-multiplier').textContent = crashMultiplier.toFixed(2) + 'x';
             document.getElementById('crash-multiplier').style.color = '#ffd700';
+            document.getElementById('crash-multiplier').style.textShadow = '0 0 10px rgba(255, 215, 0, 0.5)';
             document.getElementById('crash-bet-btn').style.display = 'inline-block';
             document.getElementById('crash-cashout-btn').style.display = 'none';
             document.getElementById('crash-result').innerHTML = 'Сделайте ставку и следите за ракетой!';
@@ -2358,43 +2637,55 @@
                 
                 const elapsedTime = (Date.now() - crashStartTime) / 1000;
                 
+                // Медленный разгон ракеты
                 if (elapsedTime < 3) {
-                    crashMultiplier = 1 + Math.pow(elapsedTime, 1.5) * 0.1;
-                } else if (elapsedTime < 10) {
-                    crashMultiplier = 1.3 + (elapsedTime - 3) * 0.15;
+                    crashMultiplier = 1 + Math.pow(elapsedTime, 1.2) * 0.05;
+                } else if (elapsedTime < 8) {
+                    crashMultiplier = 1.15 + (elapsedTime - 3) * 0.1;
+                } else if (elapsedTime < 15) {
+                    crashMultiplier = 1.65 + (elapsedTime - 8) * 0.15;
                 } else {
-                    crashMultiplier = 2.35 + Math.pow(elapsedTime - 10, 1.3) * 0.2;
+                    crashMultiplier = 2.7 + Math.pow(elapsedTime - 15, 1.3) * 0.2;
                 }
                 
                 crashMultiplier = Math.round(crashMultiplier * 100) / 100;
                 
                 document.getElementById('crash-multiplier').textContent = crashMultiplier.toFixed(2) + 'x';
                 
+                // Плавное движение ракеты
                 const containerHeight = document.getElementById('crash-container').offsetHeight;
-                const maxHeight = containerHeight - 55;
-                let rocketHeight;
+                const maxHeight = containerHeight - 80;
                 
-                if (crashMultiplier < 2) {
-                    rocketHeight = (crashMultiplier - 1) * (maxHeight / 2);
+                let rocketHeight;
+                if (crashMultiplier < 1.5) {
+                    rocketHeight = (crashMultiplier - 1) * (maxHeight / 3);
+                } else if (crashMultiplier < 3) {
+                    rocketHeight = (maxHeight / 3) + (crashMultiplier - 1.5) * (maxHeight / 4);
                 } else {
-                    rocketHeight = (maxHeight / 2) + (crashMultiplier - 2) * (maxHeight / 4);
+                    rocketHeight = (maxHeight / 1.5) + (crashMultiplier - 3) * (maxHeight / 6);
                 }
                 
                 rocketHeight = Math.min(maxHeight, rocketHeight);
                 
                 const rocket = document.getElementById('crash-rocket');
-                rocket.style.bottom = `${10 + rocketHeight}px`;
+                rocket.style.bottom = `${20 + rocketHeight}px`;
                 
+                // Изменение цвета множителя
                 if (crashMultiplier > 1.5) {
                     const intensity = Math.min(1, (crashMultiplier - 1.5) / 3);
-                    document.getElementById('crash-multiplier').style.color = `rgb(${255}, ${255 - intensity * 100}, ${255 - intensity * 200})`;
+                    const r = 255;
+                    const g = 255 - intensity * 100;
+                    const b = 255 - intensity * 200;
+                    document.getElementById('crash-multiplier').style.color = `rgb(${r}, ${g}, ${b})`;
+                    document.getElementById('crash-multiplier').style.textShadow = `0 0 15px rgba(${r}, ${g}, ${b}, 0.7)`;
                 }
                 
-                const crashProbability = 0.02 + (crashMultiplier - 1) * 0.01;
+                // Вероятность краша увеличивается медленнее
+                const crashProbability = 0.01 + (crashMultiplier - 1) * 0.005;
                 if (Math.random() < crashProbability && crashMultiplier > 1.1) {
                     endCrashGame();
                 }
-            }, 100);
+            }, 150); // Увеличили интервал для более плавного движения
         });
         
         document.getElementById('crash-cashout-btn').addEventListener('click', function() {
@@ -2410,6 +2701,11 @@
             document.getElementById('crash-result').innerHTML = `<span class="win">${resultText} Вы выиграли $${(winAmount - playerBet).toFixed(2)}!</span>`;
             addToHistory('crash', resultText, (winAmount - playerBet).toFixed(2), true);
             
+            // Анимация успешного возврата
+            const rocket = document.getElementById('crash-rocket');
+            rocket.style.background = 'linear-gradient(to bottom, #4CAF50, #2E7D32)';
+            rocket.style.filter = 'drop-shadow(0 0 15px rgba(76, 175, 80, 0.8))';
+            
             endCrashGame();
         });
         
@@ -2423,24 +2719,29 @@
                 document.getElementById('crash-result').innerHTML = `<span class="loss">${resultText} Вы проиграли $${playerBet}.</span>`;
                 addToHistory('crash', resultText, playerBet, false);
                 
+                // Анимация взрыва
                 const rocket = document.getElementById('crash-rocket');
                 rocket.style.background = 'linear-gradient(to bottom, #ff5722, #d32f2f)';
                 
                 let explosionSize = 1;
+                let opacity = 1;
                 const explodeInterval = setInterval(() => {
-                    explosionSize += 0.05;
+                    explosionSize += 0.08;
+                    opacity -= 0.05;
                     
-                    const shakeX = (Math.random() - 0.5) * 10;
-                    const shakeY = (Math.random() - 0.5) * 10;
+                    const shakeX = (Math.random() - 0.5) * 15;
+                    const shakeY = (Math.random() - 0.5) * 15;
                     
                     rocket.style.transform = `translateX(calc(-50% + ${shakeX}px)) scale(${explosionSize})`;
                     rocket.style.bottom = `${parseFloat(rocket.style.bottom) + shakeY}px`;
+                    rocket.style.opacity = opacity;
+                    rocket.style.filter = `drop-shadow(0 0 ${explosionSize * 10}px rgba(255, 87, 34, ${opacity}))`;
                     
-                    if (explosionSize > 1.5) {
+                    if (explosionSize > 2 || opacity <= 0) {
                         clearInterval(explodeInterval);
                         rocket.style.opacity = '0';
                     }
-                }, 50);
+                }, 60);
             }
             
             document.getElementById('crash-bet-btn').style.display = 'inline-block';
@@ -2453,10 +2754,10 @@
             
             setTimeout(() => {
                 resetCrashGame();
-            }, 2000);
+            }, 3000);
         }
         
-        // МИНЫ
+        // МИНЫ (без изменений)
         const minesBetControls = setupBetControls('mines');
         let minesGameActive = false;
         let minesGrid = [];
@@ -2644,6 +2945,12 @@
                 const input = document.getElementById(inputId);
                 if (input) {
                     input.value = balance;
+                    
+                    // Обновляем отображение текущей ставки
+                    const currentBetSpan = document.getElementById(`current-${this.id.replace('-allin', '').replace('slot', 'slot').replace('roulette', 'roulette').replace('blackjack', 'blackjack').replace('dice', 'dice').replace('plinko', 'plinko').replace('crash', 'crash').replace('mines', 'mines')}-bet`);
+                    if (currentBetSpan) {
+                        currentBetSpan.textContent = balance;
+                    }
                 }
             });
         });
@@ -2655,6 +2962,14 @@
                 const input = this.closest('.game-area').querySelector('.bet-input');
                 if (input) {
                     input.value = bet;
+                    
+                    // Обновляем отображение текущей ставки
+                    const gameSection = this.closest('.game-section').id;
+                    const gameId = gameSection.replace('-section', '');
+                    const currentBetSpan = document.getElementById(`current-${gameId}-bet`);
+                    if (currentBetSpan) {
+                        currentBetSpan.textContent = bet;
+                    }
                 }
             });
         });
