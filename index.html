@@ -436,7 +436,7 @@
             overflow: hidden;
         }
 
-        /* ПЛИНКО - НОВЫЙ ДИЗАЙН */
+        /* ПЛИНКО - переработанный ровный дизайн */
         .plinko-container {
             display: flex;
             flex-direction: column;
@@ -448,7 +448,7 @@
         .plinko-board {
             width: 100%;
             max-width: 600px;
-            height: 400px;
+            height: 450px;
             background: linear-gradient(to bottom, #0a0a0a, #1a1a2e);
             border-radius: 15px;
             border: 3px solid #ffd700;
@@ -457,10 +457,18 @@
             margin-bottom: 20px;
         }
 
+        .plinko-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
         .plinko-pin {
             position: absolute;
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
             border-radius: 50%;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
@@ -469,13 +477,30 @@
 
         .plinko-ball {
             position: absolute;
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             background: radial-gradient(circle at 30% 30%, #ff416c, #c2185b);
             border-radius: 50%;
             z-index: 10;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
             transition: transform 0.1s linear;
+        }
+
+        .plinko-drop-zone {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px dashed #ffd700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffd700;
+            font-size: 24px;
         }
 
         .plinko-slots-container {
@@ -491,11 +516,13 @@
 
         .plinko-slot {
             flex: 1;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.05);
+            height: 60px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
             border: 2px solid #ffd700;
-            border-radius: 8px;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             font-weight: bold;
@@ -511,20 +538,25 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 10px;
+            height: 15px;
             background: rgba(255, 215, 0, 0.1);
             border-bottom: 1px solid rgba(255, 215, 0, 0.3);
         }
 
-        .plinko-slot.active {
-            background: rgba(255, 215, 0, 0.2);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-            animation: slotPulse 0.5s ease-in-out;
+        .plinko-slot.multiplier {
+            font-size: 16px;
+            font-weight: bold;
         }
 
-        @keyframes slotPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        .plinko-slot.active {
+            background: rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+            animation: slotWin 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes slotWin {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
         }
 
         .roulette-table {
@@ -708,7 +740,7 @@
             color: white;
         }
 
-        /* КРАШ - улучшенный */
+        /* КРАШ - улучшенный, убрана кнопка сохранения ставки */
         .crash-container {
             width: 100%;
             height: 250px;
@@ -730,7 +762,7 @@
             clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
             transform: translateX(-50%);
             z-index: 20;
-            transition: bottom 0.3s ease-out;
+            transition: bottom 0.5s ease-out;
             filter: drop-shadow(0 0 10px rgba(255, 152, 0, 0.7));
         }
 
@@ -924,7 +956,7 @@
             }
             
             .plinko-board {
-                height: 350px;
+                height: 400px;
             }
             
             .game-controls {
@@ -969,7 +1001,7 @@
             }
             
             .plinko-board {
-                height: 450px;
+                height: 500px;
                 max-width: 700px;
             }
             
@@ -1168,7 +1200,7 @@
             </div>
         </div>
 
-        <!-- Слот-машина (без изменений) -->
+        <!-- Слот-машина -->
         <div class="game-section" id="slots-section">
             <h2 class="section-title"><i class="fas fa-dice"></i> Слот-машина</h2>
             <div class="game-area">
@@ -1180,6 +1212,7 @@
                         <button class="bet-btn" data-bet="500">$500</button>
                         <button class="allin-btn" id="slot-allin">All In</button>
                         <input type="number" class="bet-input" id="slot-bet" value="10" min="1">
+                        <div class="bet-amount-display">Ставка: $<span id="current-slot-bet">10</span></div>
                     </div>
                     <button class="spin-btn" id="spin-btn">КРУТИТЬ!</button>
                 </div>
@@ -1201,7 +1234,7 @@
             </div>
         </div>
 
-        <!-- Рулетка с множественными ставками -->
+        <!-- Рулетка -->
         <div class="game-section" id="roulette-section">
             <h2 class="section-title"><i class="fas fa-circle"></i> Рулетка</h2>
             <div class="game-area">
@@ -1250,7 +1283,7 @@
             </div>
         </div>
 
-        <!-- Блэкджек с измененной иконкой -->
+        <!-- Блэкджек -->
         <div class="game-section" id="blackjack-section">
             <h2 class="section-title"><i class="fas fa-id-card"></i> Блэкджек</h2>
             <div class="game-area">
@@ -1294,7 +1327,7 @@
             </div>
         </div>
 
-        <!-- Кости с объяснениями -->
+        <!-- Кости -->
         <div class="game-section" id="dice-section">
             <h2 class="section-title"><i class="fas fa-dice-six"></i> Кости</h2>
             <div class="game-area">
@@ -1365,7 +1398,7 @@
             </div>
         </div>
 
-        <!-- Плинко - полностью переработанный -->
+        <!-- Плинко - переработанный -->
         <div class="game-section" id="plinko-section">
             <h2 class="section-title"><i class="fas fa-bullseye"></i> Плинко</h2>
             <div class="game-area">
@@ -1383,7 +1416,12 @@
                 </div>
                 
                 <div class="plinko-container">
-                    <div class="plinko-board" id="plinko-board"></div>
+                    <div class="plinko-board" id="plinko-board">
+                        <div class="plinko-drop-zone">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        <div class="plinko-grid" id="plinko-grid"></div>
+                    </div>
                     <div class="plinko-slots-container">
                         <div class="plinko-slots" id="plinko-slots"></div>
                     </div>
@@ -1400,7 +1438,7 @@
             </div>
         </div>
 
-        <!-- Краш с улучшенной ракетой -->
+        <!-- Краш - без кнопки сохранения ставки -->
         <div class="game-section" id="crash-section">
             <h2 class="section-title"><i class="fas fa-rocket"></i> Краш</h2>
             <div class="game-area">
@@ -1414,7 +1452,7 @@
                         <input type="number" class="bet-input" id="crash-bet" value="10" min="1">
                         <div class="bet-amount-display">Ставка: $<span id="current-crash-bet">10</span></div>
                     </div>
-                    <button class="spin-btn" id="place-crash-bet-btn">СДЕЛАТЬ СТАВКУ</button>
+                    <button class="spin-btn" id="crash-bet-btn">СДЕЛАТЬ СТАВКУ</button>
                 </div>
                 
                 <div style="text-align: center; margin: 20px 0;">
@@ -1423,8 +1461,7 @@
                     </div>
                     <div class="crash-multiplier" id="crash-multiplier">1.00x</div>
                     <div class="crash-buttons">
-                        <button class="crash-btn crash-btn-bet" id="crash-bet-btn">СДЕЛАТЬ СТАВКУ</button>
-                        <button class="crash-btn crash-btn-cashout" id="crash-cashout-btn">ЗАБРАТЬ</button>
+                        <button class="crash-btn crash-btn-cashout" id="crash-cashout-btn" style="display: none;">ЗАБРАТЬ</button>
                     </div>
                 </div>
                 
@@ -1439,7 +1476,7 @@
             </div>
         </div>
 
-        <!-- Мины без изменений -->
+        <!-- Мины -->
         <div class="game-section" id="mines-section">
             <h2 class="section-title"><i class="fas fa-bomb"></i> Мины</h2>
             <div class="game-area">
@@ -1928,7 +1965,7 @@
                         
                         if (['red-even', 'black-odd', 'red-1-18', 'black-19-36'].includes(betType)) {
                             conditionMet = checkMultiBetWin(winningNumber, winningColor, betType);
-                            multiplier = 3; // Меньший множитель за сложные ставки
+                            multiplier = 3;
                         } else {
                             switch(betType) {
                                 case 'red':
@@ -1989,7 +2026,6 @@
                     this.disabled = false;
                     this.textContent = 'КРУТИТЬ РУЛЕТКУ!';
                     
-                    // Сброс выбора через 3 секунды
                     setTimeout(() => {
                         selectedRouletteNumbers.clear();
                         selectedRouletteBets.clear();
@@ -2352,57 +2388,74 @@
             }, 100);
         });
         
-        // ПЛИНКО - полностью переработанный
+        // ПЛИНКО - ровный и красивый дизайн
         const plinkoBetControls = setupBetControls('plinko');
         let isPlinkoActive = false;
         let plinkoAnimationFrame = null;
         
         function initPlinko() {
-            const board = document.getElementById('plinko-board');
+            const grid = document.getElementById('plinko-grid');
             const slotsContainer = document.getElementById('plinko-slots');
             
-            if (!board || !slotsContainer) return;
+            if (!grid || !slotsContainer) return;
             
-            board.innerHTML = '';
+            grid.innerHTML = '';
             slotsContainer.innerHTML = '';
             
-            // Создаем штырьки в виде треугольника
+            // Создаем симметричную сетку штырьков
+            const boardWidth = 600; // Фиксированная ширина для расчетов
+            const boardHeight = 450;
             const rows = 12;
-            const boardWidth = board.offsetWidth;
-            const boardHeight = board.offsetHeight;
-            const pinRadius = 6;
-            const verticalSpacing = (boardHeight - 100) / rows;
-            const horizontalSpacing = boardWidth / 10;
+            const pinSpacingX = 50;
+            const pinSpacingY = 35;
+            const pinRadius = 7;
             
+            // Создаем красивые симметричные ряды штырьков
             for (let row = 0; row < rows; row++) {
                 const pinsInRow = row + 1;
-                const rowStartX = (boardWidth - (pinsInRow * horizontalSpacing)) / 2;
+                const rowStartX = (boardWidth - (pinsInRow * pinSpacingX)) / 2;
                 
                 for (let col = 0; col < pinsInRow; col++) {
                     const pin = document.createElement('div');
                     pin.className = 'plinko-pin';
                     
-                    // Добавляем небольшую случайность для реалистичности
-                    const randomOffsetX = (Math.random() - 0.5) * 5;
-                    const randomOffsetY = (Math.random() - 0.5) * 5;
-                    
-                    const x = rowStartX + col * horizontalSpacing + randomOffsetX;
-                    const y = 30 + row * verticalSpacing + randomOffsetY;
+                    // Точное позиционирование
+                    const x = rowStartX + col * pinSpacingX;
+                    const y = 60 + row * pinSpacingY;
                     
                     pin.style.left = `${x - pinRadius}px`;
                     pin.style.top = `${y - pinRadius}px`;
-                    board.appendChild(pin);
+                    pin.style.width = `${pinRadius * 2}px`;
+                    pin.style.height = `${pinRadius * 2}px`;
+                    
+                    grid.appendChild(pin);
                 }
             }
             
-            // Создаем слоты с множителями
+            // Создаем красивые слоты
             const multipliers = ['0x', '0.5x', '1x', '1.5x', '5x', '1.5x', '1x', '0.5x', '0x'];
+            const slotColors = [
+                'linear-gradient(to bottom, #d32f2f, #b71c1c)',
+                'linear-gradient(to bottom, #ff9800, #f57c00)',
+                'linear-gradient(to bottom, #4CAF50, #2E7D32)',
+                'linear-gradient(to bottom, #2196F3, #0D47A1)',
+                'linear-gradient(to bottom, #9C27B0, #6A1B9A)',
+                'linear-gradient(to bottom, #2196F3, #0D47A1)',
+                'linear-gradient(to bottom, #4CAF50, #2E7D32)',
+                'linear-gradient(to bottom, #ff9800, #f57c00)',
+                'linear-gradient(to bottom, #d32f2f, #b71c1c)'
+            ];
+            
             for (let i = 0; i < 9; i++) {
                 const slot = document.createElement('div');
                 slot.className = 'plinko-slot';
-                slot.textContent = multipliers[i];
+                slot.innerHTML = `<div class="multiplier">${multipliers[i]}</div>`;
                 slot.dataset.multiplier = multipliers[i].replace('x', '');
                 slot.dataset.index = i;
+                slot.style.background = slotColors[i];
+                slot.style.borderColor = i === 4 ? '#ffd700' : '#ffd700'; // Центральный слот с золотой рамкой
+                slot.style.borderWidth = i === 4 ? '3px' : '2px';
+                
                 slotsContainer.appendChild(slot);
             }
         }
@@ -2431,28 +2484,36 @@
             const board = document.getElementById('plinko-board');
             const ball = document.createElement('div');
             ball.className = 'plinko-ball';
-            const startX = board.offsetWidth / 2 - 9;
+            
+            // Шарик появляется точно в зоне сброса
+            const dropZone = board.querySelector('.plinko-drop-zone');
+            const dropZoneRect = dropZone.getBoundingClientRect();
+            const boardRect = board.getBoundingClientRect();
+            
+            const startX = dropZoneRect.left - boardRect.left + dropZoneRect.width / 2 - 10;
+            const startY = dropZoneRect.top - boardRect.top + dropZoneRect.height / 2 - 10;
+            
             ball.style.left = `${startX}px`;
-            ball.style.top = '10px';
+            ball.style.top = `${startY}px`;
             board.appendChild(ball);
             
             document.querySelectorAll('.plinko-slot').forEach(slot => {
                 slot.classList.remove('active');
             });
             
-            // Физика шарика
+            // Плавная физика шарика
             let posX = startX;
-            let posY = 10;
+            let posY = startY;
             let velocityX = 0;
             let velocityY = 0;
-            const gravity = 0.15;
-            const friction = 0.98;
-            const ballRadius = 9;
+            const gravity = 0.2;
+            const friction = 0.99;
+            const ballRadius = 10;
             const pins = document.querySelectorAll('.plinko-pin');
-            const pinRadius = 6;
+            const pinRadius = 7;
             
             let lastCollisionTime = 0;
-            const collisionCooldown = 100; // мс
+            const collisionCooldown = 50;
             
             function animate() {
                 const currentTime = Date.now();
@@ -2460,9 +2521,9 @@
                 // Гравитация
                 velocityY += gravity;
                 
-                // Случайные небольшие отклонения для реалистичности
-                if (Math.random() < 0.1) {
-                    velocityX += (Math.random() - 0.5) * 0.3;
+                // Небольшие случайные отклонения для реалистичности
+                if (Math.random() < 0.05) {
+                    velocityX += (Math.random() - 0.5) * 0.2;
                 }
                 
                 // Обновляем позицию
@@ -2495,8 +2556,8 @@
                             velocityY = velocityY - 2 * dotProduct * normalY;
                             
                             // Потеря энергии при столкновении
-                            velocityX *= 0.7;
-                            velocityY *= 0.7;
+                            velocityX *= 0.8;
+                            velocityY *= 0.8;
                             
                             // Отодвигаем шарик от штырька
                             const overlap = (ballRadius + pinRadius) - distance;
@@ -2509,11 +2570,11 @@
                 // Столкновение со стенами
                 if (posX <= 0) {
                     posX = 0;
-                    velocityX = Math.abs(velocityX) * 0.8;
+                    velocityX = Math.abs(velocityX) * 0.9;
                 }
-                if (posX >= board.offsetWidth - 18) {
-                    posX = board.offsetWidth - 18;
-                    velocityX = -Math.abs(velocityX) * 0.8;
+                if (posX >= board.offsetWidth - 20) {
+                    posX = board.offsetWidth - 20;
+                    velocityX = -Math.abs(velocityX) * 0.9;
                 }
                 
                 // Трение
@@ -2524,15 +2585,16 @@
                 ball.style.top = `${posY}px`;
                 
                 // Проверяем, достиг ли шарик низа
-                if (posY >= board.offsetHeight - 50) {
+                if (posY >= board.offsetHeight - 70) {
                     // Определяем слот
-                    const slotWidth = board.offsetWidth / 9;
-                    const slotIndex = Math.min(8, Math.floor(posX / slotWidth));
-                    const multiplier = parseFloat(document.querySelectorAll('.plinko-slot')[slotIndex].dataset.multiplier);
+                    const slots = document.querySelectorAll('.plinko-slot');
+                    const slotWidth = board.offsetWidth / slots.length;
+                    const slotIndex = Math.min(slots.length - 1, Math.floor(posX / slotWidth));
+                    const multiplier = parseFloat(slots[slotIndex].dataset.multiplier);
                     const winAmount = Math.round(bet * multiplier * 100) / 100;
                     
                     // Подсвечиваем выигравший слот
-                    document.querySelectorAll('.plinko-slot')[slotIndex].classList.add('active');
+                    slots[slotIndex].classList.add('active');
                     
                     // Начисляем выигрыш
                     balance += winAmount;
@@ -2556,7 +2618,7 @@
                         isPlinkoActive = false;
                         document.getElementById('drop-plinko-btn').disabled = false;
                         document.getElementById('drop-plinko-btn').textContent = 'БРОСИТЬ ШАРИК!';
-                    }, 1500);
+                    }, 2000);
                     
                     if (plinkoAnimationFrame) {
                         cancelAnimationFrame(plinkoAnimationFrame);
@@ -2567,10 +2629,11 @@
                 plinkoAnimationFrame = requestAnimationFrame(animate);
             }
             
-            animate();
+            // Небольшая задержка перед началом анимации
+            setTimeout(animate, 300);
         });
         
-        // КРАШ с улучшенной ракетой
+        // КРАШ - убрана кнопка сохранения ставки
         const crashBetControls = setupBetControls('crash');
         let crashGameActive = false;
         let crashMultiplier = 1.0;
@@ -2637,15 +2700,15 @@
                 
                 const elapsedTime = (Date.now() - crashStartTime) / 1000;
                 
-                // Медленный разгон ракеты
-                if (elapsedTime < 3) {
-                    crashMultiplier = 1 + Math.pow(elapsedTime, 1.2) * 0.05;
-                } else if (elapsedTime < 8) {
-                    crashMultiplier = 1.15 + (elapsedTime - 3) * 0.1;
-                } else if (elapsedTime < 15) {
-                    crashMultiplier = 1.65 + (elapsedTime - 8) * 0.15;
+                // Очень медленный разгон ракеты
+                if (elapsedTime < 4) {
+                    crashMultiplier = 1 + Math.pow(elapsedTime, 1.1) * 0.03;
+                } else if (elapsedTime < 10) {
+                    crashMultiplier = 1.12 + (elapsedTime - 4) * 0.08;
+                } else if (elapsedTime < 20) {
+                    crashMultiplier = 1.6 + (elapsedTime - 10) * 0.12;
                 } else {
-                    crashMultiplier = 2.7 + Math.pow(elapsedTime - 15, 1.3) * 0.2;
+                    crashMultiplier = 2.8 + Math.pow(elapsedTime - 20, 1.2) * 0.15;
                 }
                 
                 crashMultiplier = Math.round(crashMultiplier * 100) / 100;
@@ -2658,11 +2721,11 @@
                 
                 let rocketHeight;
                 if (crashMultiplier < 1.5) {
-                    rocketHeight = (crashMultiplier - 1) * (maxHeight / 3);
+                    rocketHeight = (crashMultiplier - 1) * (maxHeight / 4);
                 } else if (crashMultiplier < 3) {
-                    rocketHeight = (maxHeight / 3) + (crashMultiplier - 1.5) * (maxHeight / 4);
+                    rocketHeight = (maxHeight / 4) + (crashMultiplier - 1.5) * (maxHeight / 5);
                 } else {
-                    rocketHeight = (maxHeight / 1.5) + (crashMultiplier - 3) * (maxHeight / 6);
+                    rocketHeight = (maxHeight / 1.8) + (crashMultiplier - 3) * (maxHeight / 8);
                 }
                 
                 rocketHeight = Math.min(maxHeight, rocketHeight);
@@ -2680,12 +2743,22 @@
                     document.getElementById('crash-multiplier').style.textShadow = `0 0 15px rgba(${r}, ${g}, ${b}, 0.7)`;
                 }
                 
-                // Вероятность краша увеличивается медленнее
-                const crashProbability = 0.01 + (crashMultiplier - 1) * 0.005;
+                // Очень низкая вероятность краша в начале
+                let crashProbability;
+                if (elapsedTime < 3) {
+                    crashProbability = 0.001;
+                } else if (elapsedTime < 8) {
+                    crashProbability = 0.005;
+                } else if (elapsedTime < 15) {
+                    crashProbability = 0.01;
+                } else {
+                    crashProbability = 0.02 + (crashMultiplier - 2) * 0.01;
+                }
+                
                 if (Math.random() < crashProbability && crashMultiplier > 1.1) {
                     endCrashGame();
                 }
-            }, 150); // Увеличили интервал для более плавного движения
+            }, 200); // Увеличили интервал для более плавного движения
         });
         
         document.getElementById('crash-cashout-btn').addEventListener('click', function() {
@@ -2726,22 +2799,22 @@
                 let explosionSize = 1;
                 let opacity = 1;
                 const explodeInterval = setInterval(() => {
-                    explosionSize += 0.08;
-                    opacity -= 0.05;
+                    explosionSize += 0.06;
+                    opacity -= 0.04;
                     
-                    const shakeX = (Math.random() - 0.5) * 15;
-                    const shakeY = (Math.random() - 0.5) * 15;
+                    const shakeX = (Math.random() - 0.5) * 10;
+                    const shakeY = (Math.random() - 0.5) * 10;
                     
                     rocket.style.transform = `translateX(calc(-50% + ${shakeX}px)) scale(${explosionSize})`;
                     rocket.style.bottom = `${parseFloat(rocket.style.bottom) + shakeY}px`;
                     rocket.style.opacity = opacity;
-                    rocket.style.filter = `drop-shadow(0 0 ${explosionSize * 10}px rgba(255, 87, 34, ${opacity}))`;
+                    rocket.style.filter = `drop-shadow(0 0 ${explosionSize * 8}px rgba(255, 87, 34, ${opacity}))`;
                     
-                    if (explosionSize > 2 || opacity <= 0) {
+                    if (explosionSize > 1.8 || opacity <= 0) {
                         clearInterval(explodeInterval);
                         rocket.style.opacity = '0';
                     }
-                }, 60);
+                }, 80);
             }
             
             document.getElementById('crash-bet-btn').style.display = 'inline-block';
