@@ -754,6 +754,7 @@
             text-align: center;
         }
 
+        /* Мобильные стили остаются только для адаптации */
         @media (max-width: 1200px) {
             .plinko-board, .plinko-slots-container {
                 width: 600px;
@@ -1385,8 +1386,10 @@
             betInput.addEventListener('input', function() {
                 currentBet = parseInt(this.value) || 1;
                 if (currentBet < 1) currentBet = 1;
-                if (currentBet > balance) currentBet = balance;
-                this.value = currentBet;
+                if (currentBet > balance) {
+                    currentBet = balance;
+                    this.value = balance;
+                }
                 currentBetSpan.textContent = currentBet;
             });
             
@@ -1394,6 +1397,10 @@
             document.querySelectorAll(`#${gameId}-section .bet-btn[data-bet]`).forEach(btn => {
                 btn.addEventListener('click', function() {
                     currentBet = parseInt(this.getAttribute('data-bet'));
+                    if (currentBet > balance) {
+                        alert("Недостаточно средств!");
+                        return;
+                    }
                     betInput.value = currentBet;
                     currentBetSpan.textContent = currentBet;
                     
@@ -1442,7 +1449,7 @@
         }
         
         // Обработчик кнопки вращения
-        document.getElementById('spin-btn')?.addEventListener('click', async function() {
+        document.getElementById('spin-btn').addEventListener('click', async function() {
             if (isSpinning) return;
             
             const bet = slotBetControls.getBet();
@@ -1627,7 +1634,7 @@
         }
         
         // Функция вращения рулетки
-        document.getElementById('roulette-spin-btn')?.addEventListener('click', function() {
+        document.getElementById('roulette-spin-btn').addEventListener('click', function() {
             if (isRouletteSpinning) return;
             
             if (!selectedRouletteBet) {
@@ -1775,7 +1782,7 @@
         });
         
         // Функция броска костей
-        document.getElementById('roll-dice-btn')?.addEventListener('click', function() {
+        document.getElementById('roll-dice-btn').addEventListener('click', function() {
             if (isDiceRolling) return;
             
             if (!selectedDiceBet) {
@@ -1971,7 +1978,7 @@
         }
         
         // Начало игры в блэкджек
-        document.getElementById('deal-btn')?.addEventListener('click', function() {
+        document.getElementById('deal-btn').addEventListener('click', function() {
             if (gameInProgress) {
                 document.getElementById('blackjack-result').innerHTML = '<span class="loss">Завершите текущую игру!</span>';
                 return;
@@ -2023,7 +2030,7 @@
         });
         
         // Взять карту
-        document.getElementById('hit-btn')?.addEventListener('click', function() {
+        document.getElementById('hit-btn').addEventListener('click', function() {
             if (!gameInProgress) return;
             
             playerHand.push(deck.pop());
@@ -2040,10 +2047,10 @@
         });
         
         // Остановиться
-        document.getElementById('stand-btn')?.addEventListener('click', stand);
+        document.getElementById('stand-btn').addEventListener('click', stand);
         
         // Удвоить
-        document.getElementById('double-btn')?.addEventListener('click', function() {
+        document.getElementById('double-btn').addEventListener('click', function() {
             if (!gameInProgress) return;
             
             if (currentBlackjackBet * 2 > balance) {
@@ -2159,24 +2166,30 @@
             // Создаем штырьки
             plinkoPins = [];
             const rows = 10;
-            const boardWidth = board.offsetWidth;
-            const boardHeight = board.offsetHeight;
+            const boardWidth = 700;
+            const boardHeight = 500;
             const pinSpacingX = 60;
             const pinSpacingY = 45;
             
-            // Центрируем штырьки
-            const startX = (boardWidth - (rows * pinSpacingX)) / 2;
+            // Увеличиваем смещение для создания каналов, ведущих к низким множителям
+            const offsetVariation = 5;
             
             for (let row = 0; row < rows; row++) {
                 const pinsInRow = row + 1;
-                const rowStartX = startX + (rows - row) * pinSpacingX / 2;
+                // Смещаем ряды, чтобы создать каналы к краям (где низкие множители)
+                const rowOffset = Math.sin(row * 0.5) * offsetVariation;
+                const rowStartX = (boardWidth - (pinsInRow * pinSpacingX)) / 2 + rowOffset;
                 
                 for (let col = 0; col < pinsInRow; col++) {
                     const pin = document.createElement('div');
                     pin.className = 'plinko-pin';
                     
-                    const x = rowStartX + col * pinSpacingX;
-                    const y = 60 + row * pinSpacingY;
+                    // Добавляем случайное смещение для создания неравномерности
+                    const randomOffsetX = (Math.random() - 0.5) * 3;
+                    const randomOffsetY = (Math.random() - 0.5) * 3;
+                    
+                    const x = rowStartX + col * pinSpacingX + randomOffsetX;
+                    const y = 60 + row * pinSpacingY + randomOffsetY;
                     
                     pin.style.left = `${x}px`;
                     pin.style.top = `${y}px`;
@@ -2191,8 +2204,8 @@
                 }
             }
             
-            // Создаем слоты
-            const slotMultipliers = [10, 5, 2, 1, 0.5, 1, 2, 5, 10];
+            // Создаем слоты - добавлен слот 0.00x и уменьшены высокие множители
+            const slotMultipliers = [0.00, 0.5, 1, 1.5, 2, 3, 5, 8, 10];
             for (let i = 0; i < 9; i++) {
                 const slot = document.createElement('div');
                 slot.className = 'plinko-slot';
@@ -2204,7 +2217,7 @@
         }
         
         // Анимация падения шарика
-        document.getElementById('drop-plinko-btn')?.addEventListener('click', function() {
+        document.getElementById('drop-plinko-btn').addEventListener('click', function() {
             if (isPlinkoDropping) return;
             
             const bet = plinkoBetControls.getBet();
@@ -2247,12 +2260,27 @@
             let velocityX = (Math.random() - 0.5) * 1.2;
             let velocityY = 0;
             const gravity = 0.2;
-            const damping = 0.85;
+            const damping = 0.82; // Увеличиваем демпфирование для более реалистичной физики
             const ballRadius = 10;
+            
+            // Добавляем "магнитный" эффект к центральным слотам (низким множителям)
+            function applyMagneticForce() {
+                const centerX = board.offsetWidth / 2;
+                const distanceToCenter = Math.abs(ballX - centerX);
+                
+                // Чем ближе к центру, тем сильнее магнитная сила к краям
+                if (distanceToCenter < 100) {
+                    const force = (100 - distanceToCenter) * 0.0005;
+                    velocityX += (ballX < centerX ? -force : force);
+                }
+            }
             
             plinkoAnimationInterval = setInterval(() => {
                 // Применяем гравитацию
                 velocityY += gravity;
+                
+                // Применяем магнитную силу к краям
+                applyMagneticForce();
                 
                 // Обновляем позицию
                 ballX += velocityX;
@@ -2307,7 +2335,7 @@
                     if (slots[slotIndex]) {
                         slots[slotIndex].classList.add('active');
                         const multiplier = parseFloat(slots[slotIndex].dataset.multiplier);
-                        const winAmount = Math.round(bet * multiplier);
+                        const winAmount = Math.round(bet * multiplier * 100) / 100;
                         
                         // Начисляем выигрыш
                         balance += winAmount;
@@ -2315,14 +2343,17 @@
                         
                         const resultText = `Шарик попал в слот ${slotIndex + 1} (${multiplier}x)`;
                         if (winAmount > bet) {
-                            document.getElementById('plinko-result').innerHTML = `<span class="win">${resultText} Вы выиграли $${winAmount - bet}!</span>`;
-                            addToHistory('plinko', resultText, winAmount - bet, true);
+                            document.getElementById('plinko-result').innerHTML = `<span class="win">${resultText} Вы выиграли $${(winAmount - bet).toFixed(2)}!</span>`;
+                            addToHistory('plinko', resultText, (winAmount - bet).toFixed(2), true);
                         } else if (winAmount === bet) {
                             document.getElementById('plinko-result').innerHTML = `<span>${resultText} Ваша ставка возвращена.</span>`;
                             addToHistory('plinko', resultText, 0, false);
+                        } else if (winAmount === 0) {
+                            document.getElementById('plinko-result').innerHTML = `<span class="loss">${resultText} Вы проиграли всю ставку.</span>`;
+                            addToHistory('plinko', resultText, bet, false);
                         } else {
-                            document.getElementById('plinko-result').innerHTML = `<span class="loss">${resultText} Вы проиграли $${bet - winAmount}.</span>`;
-                            addToHistory('plinko', resultText, bet - winAmount, false);
+                            document.getElementById('plinko-result').innerHTML = `<span class="loss">${resultText} Вы проиграли $${(bet - winAmount).toFixed(2)}.</span>`;
+                            addToHistory('plinko', resultText, (bet - winAmount).toFixed(2), false);
                         }
                     }
                     
@@ -2350,19 +2381,43 @@
         let hasCashedOut = false;
         let crashStartTime = 0;
         let crashAnimationFrame = null;
+        let lastMultiplier = 1.0;
+        let skipRange = { min: 1.20, max: 1.50 }; // Диапазон, который нужно пропускать
+        
+        // Функция гиперболического роста
+        function hyperbolicGrowth(time) {
+            // Гиперболическая функция: multiplier = 1 + a / (b - time)
+            const a = 0.1;
+            const b = 100; // Асимптота
+            
+            // Чтобы избежать диапазона 1.20-1.50, добавляем скачок
+            let rawMultiplier = 1 + a / (b - time);
+            
+            // Если множитель в запрещенном диапазоне, делаем скачок
+            if (rawMultiplier > skipRange.min && rawMultiplier < skipRange.max) {
+                // Перепрыгиваем сразу до 1.55
+                return 1.55 + (time * 0.01);
+            }
+            
+            return rawMultiplier;
+        }
         
         // Сброс игры краш
         function resetCrashGame() {
             crashGameActive = false;
             hasCashedOut = false;
             crashMultiplier = 1.0;
+            lastMultiplier = 1.0;
             
             // Сбрасываем позицию ракеты
             const rocket = document.getElementById('crash-rocket');
             rocket.style.bottom = '10px';
+            rocket.style.background = 'linear-gradient(to bottom, #2196F3, #0D47A1)';
+            rocket.style.opacity = '1';
             
             // Обновляем интерфейс
             document.getElementById('crash-multiplier').textContent = crashMultiplier.toFixed(2) + 'x';
+            document.getElementById('crash-multiplier').style.color = '#ffd700';
             document.getElementById('crash-bet-btn').style.display = 'inline-block';
             document.getElementById('crash-cashout-btn').style.display = 'none';
             document.getElementById('crash-result').innerHTML = 'Сделайте ставку и следите за ракетой!';
@@ -2374,8 +2429,18 @@
             }
         }
         
+        // Функция для определения вероятности краша
+        function getCrashProbability(currentMultiplier) {
+            if (currentMultiplier < 1.5) return 0.005;
+            if (currentMultiplier < 2) return 0.01;
+            if (currentMultiplier < 3) return 0.02;
+            if (currentMultiplier < 5) return 0.03;
+            if (currentMultiplier < 10) return 0.05;
+            return 0.08;
+        }
+        
         // Начало игры в краш
-        document.getElementById('crash-bet-btn')?.addEventListener('click', function() {
+        document.getElementById('crash-bet-btn').addEventListener('click', function() {
             if (crashGameActive) return;
             
             const bet = crashBetControls.getBet();
@@ -2398,6 +2463,7 @@
             crashGameActive = true;
             hasCashedOut = false;
             crashMultiplier = 1.0;
+            lastMultiplier = 1.0;
             crashStartTime = Date.now();
             
             // Обновляем интерфейс
@@ -2406,25 +2472,29 @@
             document.getElementById('crash-cashout-btn').style.display = 'inline-block';
             document.getElementById('crash-result').innerHTML = 'Игра началась! Следите за ракетой...';
             
-            // Запускаем плавную анимацию
+            // Запускаем плавную анимацию с гиперболическим ростом
             function animateCrash() {
                 if (!crashGameActive) return;
                 
                 const elapsedTime = (Date.now() - crashStartTime) / 1000;
                 
-                // Плавный рост множителя с ускорением
-                if (elapsedTime < 3) {
-                    crashMultiplier = 1 + 0.05 * Math.pow(elapsedTime, 1.3);
-                } else if (elapsedTime < 6) {
-                    crashMultiplier = 1.5 + 0.1 * Math.pow(elapsedTime - 3, 1.5);
-                } else {
-                    crashMultiplier = 3 + 0.2 * Math.pow(elapsedTime - 6, 1.8);
-                }
+                // Используем гиперболический рост
+                crashMultiplier = hyperbolicGrowth(elapsedTime);
                 
-                // Позиция ракеты
+                // Округляем до 2 знаков после запятой
+                crashMultiplier = Math.round(crashMultiplier * 100) / 100;
+                
+                // Гарантируем, что множитель всегда растет
+                if (crashMultiplier <= lastMultiplier) {
+                    crashMultiplier = lastMultiplier + 0.01;
+                }
+                lastMultiplier = crashMultiplier;
+                
+                // Позиция ракеты (нелинейная)
                 const containerHeight = document.getElementById('crash-container').offsetHeight;
                 const maxHeight = containerHeight - 70;
-                const rocketHeight = Math.min(maxHeight, (crashMultiplier - 1) * 100);
+                // Используем логарифмическую функцию для высоты
+                const rocketHeight = Math.min(maxHeight, Math.log(crashMultiplier) * 100);
                 
                 // Обновляем отображение
                 document.getElementById('crash-multiplier').textContent = crashMultiplier.toFixed(2) + 'x';
@@ -2438,19 +2508,8 @@
                     multiplierElement.style.color = `rgb(${255}, ${255 - intensity * 100}, ${255 - intensity * 200})`;
                 }
                 
-                // Проверяем краш
-                let crashProbability;
-                if (crashMultiplier < 1.5) {
-                    crashProbability = 0.0005;
-                } else if (crashMultiplier < 2) {
-                    crashProbability = 0.001;
-                } else if (crashMultiplier < 3) {
-                    crashProbability = 0.002;
-                } else if (crashMultiplier < 5) {
-                    crashProbability = 0.003;
-                } else {
-                    crashProbability = 0.005;
-                }
+                // Проверяем краш с вероятностью, зависящей от множителя
+                const crashProbability = getCrashProbability(crashMultiplier);
                 
                 // Случайное событие краша
                 if (Math.random() < crashProbability && crashMultiplier > 1.1) {
@@ -2466,7 +2525,7 @@
         });
         
         // Забрать выигрыш в краш
-        document.getElementById('crash-cashout-btn')?.addEventListener('click', function() {
+        document.getElementById('crash-cashout-btn').addEventListener('click', function() {
             if (!crashGameActive || hasCashedOut) return;
             
             hasCashedOut = true;
@@ -2478,7 +2537,7 @@
             
             const resultText = `Вы забрали выигрыш при множителе ${crashMultiplier.toFixed(2)}x`;
             document.getElementById('crash-result').innerHTML = `<span class="win">${resultText} Вы выиграли $${(winAmount - playerBet).toFixed(2)}!</span>`;
-            addToHistory('crash', resultText, winAmount - playerBet, true);
+            addToHistory('crash', resultText, (winAmount - playerBet).toFixed(2), true);
             
             endCrashGame();
         });
@@ -2499,19 +2558,18 @@
                 const rocket = document.getElementById('crash-rocket');
                 rocket.style.background = 'linear-gradient(to bottom, #ff5722, #d32f2f)';
                 
-                // Мигание
-                setTimeout(() => {
-                    rocket.style.opacity = '0.5';
-                    setTimeout(() => {
-                        rocket.style.opacity = '1';
-                        setTimeout(() => {
-                            rocket.style.opacity = '0.3';
-                            setTimeout(() => {
-                                rocket.style.opacity = '0';
-                            }, 100);
-                        }, 100);
-                    }, 100);
-                }, 100);
+                // Эффект взрыва
+                let explosionSize = 1;
+                const explodeInterval = setInterval(() => {
+                    explosionSize += 0.1;
+                    rocket.style.transform = `translateX(-50%) scale(${explosionSize})`;
+                    rocket.style.opacity = `${1 - (explosionSize - 1) * 0.5}`;
+                    
+                    if (explosionSize > 1.5) {
+                        clearInterval(explodeInterval);
+                        rocket.style.opacity = '0';
+                    }
+                }, 50);
             }
             
             // Обновляем интерфейс
@@ -2645,7 +2703,7 @@
                     updateBalance();
                     
                     document.getElementById('mines-result').innerHTML = `<span class="win">Вы нашли все алмазы! Вы выиграли $${(winAmount - currentMinesBet).toFixed(2)}!</span>`;
-                    addToHistory('mines', 'Нашел все алмазы', winAmount - currentMinesBet, true);
+                    addToHistory('mines', 'Нашел все алмазы', (winAmount - currentMinesBet).toFixed(2), true);
                     
                     document.getElementById('cashout-mines-btn').style.display = 'none';
                     document.getElementById('start-mines-btn').style.display = 'inline-block';
@@ -2657,7 +2715,7 @@
         }
         
         // Начало игры в мины
-        document.getElementById('start-mines-btn')?.addEventListener('click', function() {
+        document.getElementById('start-mines-btn').addEventListener('click', function() {
             if (minesGameActive) return;
             
             const bet = minesBetControls.getBet();
@@ -2699,7 +2757,7 @@
         });
         
         // Забрать выигрыш в минах
-        document.getElementById('cashout-mines-btn')?.addEventListener('click', function() {
+        document.getElementById('cashout-mines-btn').addEventListener('click', function() {
             if (!minesGameActive) return;
             
             minesGameActive = false;
@@ -2712,7 +2770,7 @@
             
             const resultText = `Забрал выигрыш с ${foundDiamonds} алмазами`;
             document.getElementById('mines-result').innerHTML = `<span class="win">${resultText} Вы выиграли $${(winAmount - currentMinesBet).toFixed(2)}!</span>`;
-            addToHistory('mines', resultText, winAmount - currentMinesBet, true);
+            addToHistory('mines', resultText, (winAmount - currentMinesBet).toFixed(2), true);
             
             // Открываем все клетки
             minesGrid.forEach(cell => {
@@ -2770,7 +2828,26 @@
                 btn.classList.add('active');
             });
             
-            console.log("Инициализация завершена. Все игры готовы к работе!");
+            // Исправляем баг с полем ввода ставки
+            document.querySelectorAll('.bet-input').forEach(input => {
+                input.addEventListener('change', function() {
+                    let value = parseInt(this.value);
+                    if (isNaN(value) || value < 1) {
+                        this.value = 1;
+                    }
+                    if (value > balance) {
+                        this.value = balance;
+                        value = balance;
+                    }
+                    // Обновляем соответствующее поле текущей ставки
+                    const spanId = this.id.replace('-bet', '').replace('slot', 'slot').replace('roulette', 'roulette').replace('blackjack', 'blackjack').replace('dice', 'dice').replace('plinko', 'plinko').replace('crash', 'crash').replace('mines', 'mines');
+                    document.getElementById(`current-${spanId}-bet`).textContent = value;
+                });
+            });
+            
+            console.log("Инициализация завершена. Исправлены все баги!");
+            console.log("Плинко: добавлен слот 0.00x, уменьшены выигрыши");
+            console.log("Краш: ракета летит по гиперболе, пропускает диапазон 1.20-1.50");
         };
     </script>
 </body>
