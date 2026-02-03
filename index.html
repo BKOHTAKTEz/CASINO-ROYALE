@@ -280,6 +280,22 @@
             width: 150px;
         }
 
+        .allin-btn {
+            background: linear-gradient(to right, #4CAF50, #2E7D32);
+            color: white;
+            border: 1px solid #4CAF50;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .allin-btn:hover {
+            background: linear-gradient(to right, #2E7D32, #4CAF50);
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+
         .spin-btn {
             background: linear-gradient(to right, #ff416c, #ff4b2b);
             color: white;
@@ -568,7 +584,7 @@
             clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
             transform: translateX(-50%);
             z-index: 20;
-            transition: bottom 0.05s linear;
+            transition: bottom 0.1s ease-out;
         }
 
         .crash-rocket::before {
@@ -589,7 +605,7 @@
             margin: 20px 0;
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
             height: 60px;
-            transition: all 0.1s ease-out;
+            transition: all 0.2s ease-out;
         }
 
         .crash-buttons {
@@ -954,6 +970,7 @@
                             <button class="bet-btn" data-bet="50">$50</button>
                             <button class="bet-btn" data-bet="100">$100</button>
                             <button class="bet-btn" data-bet="500">$500</button>
+                            <button class="allin-btn" id="slot-allin">All In</button>
                             <input type="number" class="bet-input" id="slot-bet" value="50" min="1">
                             <div>Текущая ставка: $<span id="current-slot-bet">50</span></div>
                         </div>
@@ -993,6 +1010,7 @@
                             <button class="bet-btn" data-bet="50">$50</button>
                             <button class="bet-btn" data-bet="100">$100</button>
                             <button class="bet-btn" data-bet="500">$500</button>
+                            <button class="allin-btn" id="roulette-allin">All In</button>
                             <input type="number" class="bet-input" id="roulette-bet" value="50" min="1">
                             <div>Текущая ставка: $<span id="current-roulette-bet">50</span></div>
                         </div>
@@ -1039,6 +1057,7 @@
                             <button class="bet-btn" data-bet="50">$50</button>
                             <button class="bet-btn" data-bet="100">$100</button>
                             <button class="bet-btn" data-bet="500">$500</button>
+                            <button class="allin-btn" id="blackjack-allin">All In</button>
                             <input type="number" class="bet-input" id="blackjack-bet" value="50" min="1">
                             <div>Текущая ставка: $<span id="current-blackjack-bet">50</span></div>
                         </div>
@@ -1082,6 +1101,7 @@
                             <button class="bet-btn" data-bet="50">$50</button>
                             <button class="bet-btn" data-bet="100">$100</button>
                             <button class="bet-btn" data-bet="500">$500</button>
+                            <button class="allin-btn" id="dice-allin">All In</button>
                             <input type="number" class="bet-input" id="dice-bet" value="50" min="1">
                             <div>Текущая ставка: $<span id="current-dice-bet">50</span></div>
                         </div>
@@ -1141,6 +1161,7 @@
                             <button class="bet-btn" data-bet="50">$50</button>
                             <button class="bet-btn" data-bet="100">$100</button>
                             <button class="bet-btn" data-bet="500">$500</button>
+                            <button class="allin-btn" id="plinko-allin">All In</button>
                             <input type="number" class="bet-input" id="plinko-bet" value="50" min="1">
                             <div>Текущая ставка: $<span id="current-plinko-bet">50</span></div>
                         </div>
@@ -1179,6 +1200,7 @@
                             <button class="bet-btn" data-bet="50">$50</button>
                             <button class="bet-btn" data-bet="100">$100</button>
                             <button class="bet-btn" data-bet="500">$500</button>
+                            <button class="allin-btn" id="crash-allin">All In</button>
                             <input type="number" class="bet-input" id="crash-bet" value="50" min="1">
                             <div>Текущая ставка: $<span id="current-crash-bet">50</span></div>
                         </div>
@@ -1217,6 +1239,7 @@
                             <button class="bet-btn" data-bet="50">$50</button>
                             <button class="bet-btn" data-bet="100">$100</button>
                             <button class="bet-btn" data-bet="500">$500</button>
+                            <button class="allin-btn" id="mines-allin">All In</button>
                             <input type="number" class="bet-input" id="mines-bet" value="50" min="1">
                             <div>Текущая ставка: $<span id="current-mines-bet">50</span></div>
                         </div>
@@ -1383,13 +1406,10 @@
             
             let currentBet = parseInt(betInput.value) || 50;
             
+            // Убираем ограничения по максимальной ставке
             betInput.addEventListener('input', function() {
                 currentBet = parseInt(this.value) || 1;
                 if (currentBet < 1) currentBet = 1;
-                if (currentBet > balance) {
-                    currentBet = balance;
-                    this.value = balance;
-                }
                 currentBetSpan.textContent = currentBet;
             });
             
@@ -1397,10 +1417,6 @@
             document.querySelectorAll(`#${gameId}-section .bet-btn[data-bet]`).forEach(btn => {
                 btn.addEventListener('click', function() {
                     currentBet = parseInt(this.getAttribute('data-bet'));
-                    if (currentBet > balance) {
-                        alert("Недостаточно средств!");
-                        return;
-                    }
                     betInput.value = currentBet;
                     currentBetSpan.textContent = currentBet;
                     
@@ -1409,6 +1425,18 @@
                         b.classList.remove('active');
                     });
                     this.classList.add('active');
+                });
+            });
+            
+            // Кнопка All In
+            document.getElementById(`${gameId}-allin`).addEventListener('click', function() {
+                currentBet = balance;
+                betInput.value = currentBet;
+                currentBetSpan.textContent = currentBet;
+                
+                // Выделяем кнопку All In
+                document.querySelectorAll(`#${gameId}-section .bet-btn[data-bet]`).forEach(b => {
+                    b.classList.remove('active');
                 });
             });
             
@@ -2165,19 +2193,17 @@
             
             // Создаем штырьки
             plinkoPins = [];
-            const rows = 10;
+            const rows = 12; // Увеличили ряды для большей сложности
             const boardWidth = 700;
             const boardHeight = 500;
-            const pinSpacingX = 60;
-            const pinSpacingY = 45;
+            const pinSpacingX = 55;
+            const pinSpacingY = 40;
             
-            // Увеличиваем смещение для создания каналов, ведущих к низким множителям
-            const offsetVariation = 5;
-            
+            // Создаем несимметричную сетку для смещения шариков к краям
             for (let row = 0; row < rows; row++) {
                 const pinsInRow = row + 1;
-                // Смещаем ряды, чтобы создать каналы к краям (где низкие множители)
-                const rowOffset = Math.sin(row * 0.5) * offsetVariation;
+                // Смещаем каждый ряд по-разному
+                const rowOffset = Math.sin(row * 0.7) * 15; // Синусоидальное смещение
                 const rowStartX = (boardWidth - (pinsInRow * pinSpacingX)) / 2 + rowOffset;
                 
                 for (let col = 0; col < pinsInRow; col++) {
@@ -2185,11 +2211,11 @@
                     pin.className = 'plinko-pin';
                     
                     // Добавляем случайное смещение для создания неравномерности
-                    const randomOffsetX = (Math.random() - 0.5) * 3;
-                    const randomOffsetY = (Math.random() - 0.5) * 3;
+                    const randomOffsetX = (Math.random() - 0.5) * 4;
+                    const randomOffsetY = (Math.random() - 0.5) * 4;
                     
                     const x = rowStartX + col * pinSpacingX + randomOffsetX;
-                    const y = 60 + row * pinSpacingY + randomOffsetY;
+                    const y = 50 + row * pinSpacingY + randomOffsetY;
                     
                     pin.style.left = `${x}px`;
                     pin.style.top = `${y}px`;
@@ -2204,8 +2230,8 @@
                 }
             }
             
-            // Создаем слоты - добавлен слот 0.00x и уменьшены высокие множители
-            const slotMultipliers = [0.00, 0.5, 1, 1.5, 2, 3, 5, 8, 10];
+            // Создаем слоты - лучшие коэффициенты в центре, 0.00 по краям
+            const slotMultipliers = [0.00, 0.5, 1, 3, 10, 3, 1, 0.5, 0.00];
             for (let i = 0; i < 9; i++) {
                 const slot = document.createElement('div');
                 slot.className = 'plinko-slot';
@@ -2257,21 +2283,27 @@
             // Анимация падения
             let ballX = startX;
             let ballY = 20;
-            let velocityX = (Math.random() - 0.5) * 1.2;
+            let velocityX = (Math.random() - 0.5) * 0.5; // Уменьшили начальную скорость
             let velocityY = 0;
-            const gravity = 0.2;
-            const damping = 0.82; // Увеличиваем демпфирование для более реалистичной физики
+            const gravity = 0.15; // Уменьшили гравитацию
+            const damping = 0.78; // Увеличили демпфирование
             const ballRadius = 10;
             
-            // Добавляем "магнитный" эффект к центральным слотам (низким множителям)
-            function applyMagneticForce() {
+            // Добавляем магнитный эффект к краям
+            function applyEdgeForce() {
                 const centerX = board.offsetWidth / 2;
                 const distanceToCenter = Math.abs(ballX - centerX);
+                const edgeThreshold = board.offsetWidth * 0.4;
                 
-                // Чем ближе к центру, тем сильнее магнитная сила к краям
-                if (distanceToCenter < 100) {
-                    const force = (100 - distanceToCenter) * 0.0005;
+                // Если шарик близко к краям, толкаем его еще дальше
+                if (distanceToCenter > edgeThreshold) {
+                    const force = (distanceToCenter - edgeThreshold) * 0.001;
                     velocityX += (ballX < centerX ? -force : force);
+                }
+                
+                // Дополнительно толкаем к краям с вероятностью
+                if (Math.random() < 0.01) {
+                    velocityX += (Math.random() - 0.5) * 0.3;
                 }
             }
             
@@ -2279,8 +2311,8 @@
                 // Применяем гравитацию
                 velocityY += gravity;
                 
-                // Применяем магнитную силу к краям
-                applyMagneticForce();
+                // Применяем силу к краям
+                applyEdgeForce();
                 
                 // Обновляем позицию
                 ballX += velocityX;
@@ -2314,7 +2346,7 @@
                 
                 // Стены
                 if (ballX <= 0 || ballX >= board.offsetWidth - 20) {
-                    velocityX = -velocityX * damping;
+                    velocityX = -velocityX * damping * 0.9;
                     ballX = ballX <= 0 ? 0 : board.offsetWidth - 20;
                 }
                 
@@ -2382,24 +2414,39 @@
         let crashStartTime = 0;
         let crashAnimationFrame = null;
         let lastMultiplier = 1.0;
-        let skipRange = { min: 1.20, max: 1.50 }; // Диапазон, который нужно пропускать
+        let speedFactor = 0.1; // Начинаем медленно
+        const stableSpeedThreshold = 1.6; // После 1.6x скорость стабилизируется
         
-        // Функция гиперболического роста
-        function hyperbolicGrowth(time) {
-            // Гиперболическая функция: multiplier = 1 + a / (b - time)
-            const a = 0.1;
-            const b = 100; // Асимптота
-            
-            // Чтобы избежать диапазона 1.20-1.50, добавляем скачок
-            let rawMultiplier = 1 + a / (b - time);
-            
-            // Если множитель в запрещенном диапазоне, делаем скачок
-            if (rawMultiplier > skipRange.min && rawMultiplier < skipRange.max) {
-                // Перепрыгиваем сразу до 1.55
-                return 1.55 + (time * 0.01);
+        // Функция с постепенным разгоном
+        function getMultiplierWithAcceleration(time) {
+            // Начинаем медленно с экспоненциальным ускорением
+            if (time < 2) {
+                // Очень медленный старт
+                return 1 + Math.pow(time, 2) * 0.03;
+            } else if (time < 5) {
+                // Плавное ускорение
+                return 1.12 + Math.pow(time - 2, 1.3) * 0.1;
+            } else if (time < 10) {
+                // Стабильный рост
+                return 1.5 + (time - 5) * 0.08;
+            } else {
+                // Быстрый рост после 10 секунд
+                return 1.9 + Math.pow(time - 10, 1.2) * 0.15;
             }
-            
-            return rawMultiplier;
+        }
+        
+        // Функция для определения вероятности краша
+        function getCrashProbability(currentMultiplier, time) {
+            // В начале игры очень маленькая вероятность
+            if (time < 2) return 0.0001;
+            if (time < 5) return 0.0005;
+            if (time < 10) return 0.001;
+            if (currentMultiplier < 1.5) return 0.002;
+            if (currentMultiplier < 2) return 0.005;
+            if (currentMultiplier < 3) return 0.01;
+            if (currentMultiplier < 5) return 0.02;
+            if (currentMultiplier < 10) return 0.03;
+            return 0.05;
         }
         
         // Сброс игры краш
@@ -2408,12 +2455,14 @@
             hasCashedOut = false;
             crashMultiplier = 1.0;
             lastMultiplier = 1.0;
+            speedFactor = 0.1;
             
             // Сбрасываем позицию ракеты
             const rocket = document.getElementById('crash-rocket');
             rocket.style.bottom = '10px';
             rocket.style.background = 'linear-gradient(to bottom, #2196F3, #0D47A1)';
             rocket.style.opacity = '1';
+            rocket.style.transform = 'translateX(-50%) scale(1)';
             
             // Обновляем интерфейс
             document.getElementById('crash-multiplier').textContent = crashMultiplier.toFixed(2) + 'x';
@@ -2427,16 +2476,6 @@
                 cancelAnimationFrame(crashAnimationFrame);
                 crashAnimationFrame = null;
             }
-        }
-        
-        // Функция для определения вероятности краша
-        function getCrashProbability(currentMultiplier) {
-            if (currentMultiplier < 1.5) return 0.005;
-            if (currentMultiplier < 2) return 0.01;
-            if (currentMultiplier < 3) return 0.02;
-            if (currentMultiplier < 5) return 0.03;
-            if (currentMultiplier < 10) return 0.05;
-            return 0.08;
         }
         
         // Начало игры в краш
@@ -2464,6 +2503,7 @@
             hasCashedOut = false;
             crashMultiplier = 1.0;
             lastMultiplier = 1.0;
+            speedFactor = 0.1;
             crashStartTime = Date.now();
             
             // Обновляем интерфейс
@@ -2472,14 +2512,14 @@
             document.getElementById('crash-cashout-btn').style.display = 'inline-block';
             document.getElementById('crash-result').innerHTML = 'Игра началась! Следите за ракетой...';
             
-            // Запускаем плавную анимацию с гиперболическим ростом
+            // Запускаем анимацию с постепенным разгоном
             function animateCrash() {
                 if (!crashGameActive) return;
                 
                 const elapsedTime = (Date.now() - crashStartTime) / 1000;
                 
-                // Используем гиперболический рост
-                crashMultiplier = hyperbolicGrowth(elapsedTime);
+                // Получаем множитель с постепенным разгоном
+                crashMultiplier = getMultiplierWithAcceleration(elapsedTime);
                 
                 // Округляем до 2 знаков после запятой
                 crashMultiplier = Math.round(crashMultiplier * 100) / 100;
@@ -2490,11 +2530,29 @@
                 }
                 lastMultiplier = crashMultiplier;
                 
-                // Позиция ракеты (нелинейная)
+                // После 1.6x стабилизируем скорость роста
+                if (crashMultiplier > stableSpeedThreshold && speedFactor < 0.3) {
+                    speedFactor = 0.3; // Стабильная скорость
+                }
+                
+                // Позиция ракеты (нелинейная с учетом разгона)
                 const containerHeight = document.getElementById('crash-container').offsetHeight;
                 const maxHeight = containerHeight - 70;
-                // Используем логарифмическую функцию для высоты
-                const rocketHeight = Math.min(maxHeight, Math.log(crashMultiplier) * 100);
+                
+                // Используем логарифмическую функцию для высоты с учетом разгона
+                let rocketHeight;
+                if (elapsedTime < 5) {
+                    // Медленный подъем в начале
+                    rocketHeight = Math.log(crashMultiplier) * 80;
+                } else if (elapsedTime < 10) {
+                    // Средняя скорость
+                    rocketHeight = Math.log(crashMultiplier) * 100;
+                } else {
+                    // Быстрый подъем
+                    rocketHeight = Math.log(crashMultiplier) * 120;
+                }
+                
+                rocketHeight = Math.min(maxHeight, rocketHeight);
                 
                 // Обновляем отображение
                 document.getElementById('crash-multiplier').textContent = crashMultiplier.toFixed(2) + 'x';
@@ -2503,13 +2561,13 @@
                 
                 // Изменение цвета множителя
                 const multiplierElement = document.getElementById('crash-multiplier');
-                if (crashMultiplier > 2) {
-                    const intensity = Math.min(1, (crashMultiplier - 2) / 3);
+                if (crashMultiplier > 1.5) {
+                    const intensity = Math.min(1, (crashMultiplier - 1.5) / 3);
                     multiplierElement.style.color = `rgb(${255}, ${255 - intensity * 100}, ${255 - intensity * 200})`;
                 }
                 
-                // Проверяем краш с вероятностью, зависящей от множителя
-                const crashProbability = getCrashProbability(crashMultiplier);
+                // Проверяем краш с вероятностью, зависящей от множителя и времени
+                const crashProbability = getCrashProbability(crashMultiplier, elapsedTime);
                 
                 // Случайное событие краша
                 if (Math.random() < crashProbability && crashMultiplier > 1.1) {
@@ -2558,14 +2616,22 @@
                 const rocket = document.getElementById('crash-rocket');
                 rocket.style.background = 'linear-gradient(to bottom, #ff5722, #d32f2f)';
                 
-                // Эффект взрыва
+                // Эффект взрыва с дрожанием
                 let explosionSize = 1;
+                let shakeIntensity = 0;
                 const explodeInterval = setInterval(() => {
-                    explosionSize += 0.1;
-                    rocket.style.transform = `translateX(-50%) scale(${explosionSize})`;
-                    rocket.style.opacity = `${1 - (explosionSize - 1) * 0.5}`;
+                    explosionSize += 0.05;
+                    shakeIntensity += 2;
                     
-                    if (explosionSize > 1.5) {
+                    // Дрожание
+                    const shakeX = (Math.random() - 0.5) * shakeIntensity;
+                    const shakeY = (Math.random() - 0.5) * shakeIntensity;
+                    
+                    rocket.style.transform = `translateX(calc(-50% + ${shakeX}px)) scale(${explosionSize})`;
+                    rocket.style.bottom = `${parseFloat(rocket.style.bottom) + shakeY}px`;
+                    rocket.style.opacity = `${1 - (explosionSize - 1) * 0.3}`;
+                    
+                    if (explosionSize > 1.8) {
                         clearInterval(explodeInterval);
                         rocket.style.opacity = '0';
                     }
@@ -2828,16 +2894,13 @@
                 btn.classList.add('active');
             });
             
-            // Исправляем баг с полем ввода ставки
+            // Исправляем баг с полем ввода ставки - убираем ограничения
             document.querySelectorAll('.bet-input').forEach(input => {
                 input.addEventListener('change', function() {
                     let value = parseInt(this.value);
                     if (isNaN(value) || value < 1) {
                         this.value = 1;
-                    }
-                    if (value > balance) {
-                        this.value = balance;
-                        value = balance;
+                        value = 1;
                     }
                     // Обновляем соответствующее поле текущей ставки
                     const spanId = this.id.replace('-bet', '').replace('slot', 'slot').replace('roulette', 'roulette').replace('blackjack', 'blackjack').replace('dice', 'dice').replace('plinko', 'plinko').replace('crash', 'crash').replace('mines', 'mines');
@@ -2845,9 +2908,11 @@
                 });
             });
             
-            console.log("Инициализация завершена. Исправлены все баги!");
-            console.log("Плинко: добавлен слот 0.00x, уменьшены выигрыши");
-            console.log("Краш: ракета летит по гиперболе, пропускает диапазон 1.20-1.50");
+            console.log("Инициализация завершена. Все улучшения внедрены!");
+            console.log("✓ Убраны ограничения по максимальной ставке");
+            console.log("✓ Добавлена кнопка All In во все игры");
+            console.log("✓ Плинко: лучшие коэффициенты в центре, 0.00 по краям");
+            console.log("✓ Краш: ракета постепенно разгоняется, стабильная скорость после 1.6x");
         };
     </script>
 </body>
